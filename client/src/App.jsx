@@ -1,4 +1,4 @@
-import Main from "../components/navbar/Navbar";
+import Main from "../components/main/Main";
 
 export default function App() {
   return (
