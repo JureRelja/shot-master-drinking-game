@@ -1,30 +1,31 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { CreateGameScreen } from "..";
 
 const Main = () => {
-    let r = 0.68;
     const g_alch = 10.428;
 
-    const [counter, setCounter] = useState(0);
+    const [brojPica, setBrojPica] = useState(1);
     const [kile, setKile] = useState(0);
-    const [gender, setGender] = useState("");
     const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden")
     const [formStyle, setFormStyle] = useState("block")
     const [BAC, setBAC] = useState(0)
-
     const [created, setCreated] = useState(false)
-
+    const [r, setR] = useState(0)
     
     const kileEvent = event => {
        setKile(event.target.value * 1000)
     }
 
     const genderEvent = event => {
-        setGender(event.target.value)
-        if (gender == "Muško") {
-            r = 0.68
+        console.log(event.target.value)
+        //console.log(gender)
+        if (event.target.value == "Žensko") {
+            setR(0.55)
+        }
+        else if (event.target.value == "Muško") {
+            setR(0.68)
         }
     }
     
@@ -35,8 +36,8 @@ const Main = () => {
     }
 
     const shootEvent = () => {
-        setCounter(count => count + 1);
-        setBAC((counter*g_alch/(kile*r))*1000)
+        setBrojPica(count => count + 1);
+        setBAC((brojPica*g_alch/(kile*r))*1000)
     };
     return (
         <>
@@ -57,9 +58,8 @@ const Main = () => {
                   <span className={`${buttonAndBacStyle}`}>{BAC}</span>
               </div>
           </div>
-        )}  
-        </>
-        
+        )}
+        </>   
     );
 }
 export default Main;
