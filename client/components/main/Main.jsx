@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Button } from "@material-tailwind/react";
+import { CreateGameScreen } from "..";
 
 const Main = () => {
     let r = 0.68;
@@ -12,6 +13,9 @@ const Main = () => {
     const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden")
     const [formStyle, setFormStyle] = useState("block")
     const [BAC, setBAC] = useState(0)
+
+    const [created, setCreated] = useState(false)
+
     
     const kileEvent = event => {
        setKile(event.target.value * 1000)
@@ -36,19 +40,24 @@ const Main = () => {
     };
     return (
         <>
-        <div className='text-3xl font-bold underline bg-black-300'>
-            <form onSubmit={submitEvent} className={`${formStyle}`}>
-                <input className='bg-green-500' type="number" onChange={kileEvent}/>
-                <select onChange={genderEvent}>
-                    <option value="Muško">Muško</option>
-                    <option value="Žensko">Žensko</option>
-                </select>
-                <button type="submit">Submit</button>
-            </form>
-            
-            <Button variant="outlined" color="blue" className={`${buttonAndBacStyle}`} onClick={shootEvent}>Šotiraj</Button>
-            <span className={`${buttonAndBacStyle}`}>{BAC}</span>
-        </div>
+        {!created ? <CreateGameScreen />
+        : (
+          <div id="container" className="flex justify-center">
+              <div className='bg-black-300 w-[300px]'>
+                  <form onSubmit={submitEvent} className={`${formStyle}`}>
+                      <input className='bg-green-500' type="number" onChange={kileEvent}/>
+                      <select onChange={genderEvent}>
+                          <option value="Muško">Muško</option>
+                          <option value="Žensko">Žensko</option>
+                      </select>
+                      <button type="submit">Submit</button>
+                  </form>
+                  <h1>Utapanje</h1>
+                  <Button variant="outlined" color="blue" className={`${buttonAndBacStyle}`} onClick={shootEvent}>Šotiraj</Button>
+                  <span className={`${buttonAndBacStyle}`}>{BAC}</span>
+              </div>
+          </div>
+        )}  
         </>
         
     );

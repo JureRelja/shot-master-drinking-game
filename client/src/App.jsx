@@ -1,4 +1,4 @@
-import Main from "../components/main/Main";
+import { Main } from "../components/Main/Main";
 import { Button } from "@material-tailwind/react";
 
 
