@@ -1,5 +1,6 @@
-import React from 'react'
-import { useState } from 'react';
+import React from "react";
+import { useState } from "react";
+import { Button } from "@material-tailwind/react";
 
 const Main = () => {
     let r = 0.68;
@@ -45,13 +46,11 @@ const Main = () => {
                 <button type="submit">Submit</button>
             </form>
             
-            <button className={`${buttonAndBacStyle}`} onClick={shootEvent}>Shootiraj</button>
+            <Button variant="outlined" color="blue" className={`${buttonAndBacStyle}`} onClick={shootEvent}>Šotiraj</Button>
             <span className={`${buttonAndBacStyle}`}>{BAC}</span>
         </div>
         </>
         
     );
-
 }
-
-export default Main
+export default Main;
