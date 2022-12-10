@@ -1,7 +1,7 @@
-import Main from "./Main/Main";
-import CreateGameScreen from "./CreateGameScreen/CreateGameScreen";
+import Main from "./Main";
+import CreateGameScreen from "./CreateGameScreen";
 
 export {
-  Navbar,
+  Main,
   CreateGameScreen
 };

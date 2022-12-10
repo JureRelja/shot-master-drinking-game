@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Button } from "@material-tailwind/react";
-import { CreateGameScreen } from "..";
+import { CreateGameScreen } from ".";
 
 const Main = () => {
     const g_alch = 10.428;
