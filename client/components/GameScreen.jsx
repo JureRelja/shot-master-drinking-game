@@ -2,8 +2,11 @@ import React from "react";
 import { useState, useEffect, useMountEffect } from "react";
 import { Button } from "@material-tailwind/react";
 import Character from "./Character";
+import socketIO from "socket.io-client";
 
 const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
+  const socket = socketIO.connect("http://localhost:4000");
+
   const g_alch = 10.428;
   const [ukupniBAC, setUkupniBAC] = useState(0);
   const [i, setI] = useState(0);
