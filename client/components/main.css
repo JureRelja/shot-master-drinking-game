@@ -10,3 +10,7 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+#first_player, #second_player {
+    border: 2px solid;
+}

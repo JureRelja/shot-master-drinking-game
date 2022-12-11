@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Button } from "@material-tailwind/react";
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo.gif";
 import { Input } from "@material-tailwind/react";
 import "./main.css";
 
@@ -74,9 +74,7 @@ const Main = () => {
                 onChange={genderEvent}
                 className="bg-gray-50 border mb-4 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-                <option value="" selected disabled hidden>
-                  Odaberi spol
-                </option>
+                <option value="">Odaberi spol</option>
                 <option value="Muško">Muško</option>
                 <option value="Žensko">Žensko</option>
               </select>

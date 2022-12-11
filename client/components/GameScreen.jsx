@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useMountEffect } from "react";
 import { Button } from "@material-tailwind/react";
+import Character from "./Character";
 
 const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
   const g_alch = 10.428;
@@ -28,11 +29,31 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
 
   return (
     <>
-      <div className={`${buttonAndBacStyle}`}>
-        <Button variant="outlined" color="green" onClick={shootEvent}>
-          Šotiraj
-        </Button>
-        <span>{ukupniBAC}</span>
+      <div
+        className={`flex h-[100vh] w-[100vw] justify-center ${buttonAndBacStyle}`}
+      >
+        <div
+          id="first_player"
+          className="flex flex-col justify-center w-[30%] border-red-200"
+        >
+          <Character />
+          <Button
+            className="h-[40px]"
+            variant="outlined"
+            color="green"
+            onClick={shootEvent}
+          >
+            Šotiraj
+          </Button>
+          <span>{ukupniBAC}</span>
+        </div>
+        <div
+          id="second_player"
+          className="flex flex-col justify-center w-[30%]"
+        >
+          <Character />
+          <span>Oponent Took a Shoot</span>
+        </div>
       </div>
     </>
   );
