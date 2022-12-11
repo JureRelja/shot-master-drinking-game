@@ -2,6 +2,10 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Button } from "@material-tailwind/react";
 import logo from "../assets/logo.svg";
+import { Input } from "@material-tailwind/react";
+import "./main.css";
+
+import { FaWeightHanging } from "react-icons/fa";
 
 const Main = () => {
   const g_alch = 10.428;
@@ -42,7 +46,7 @@ const Main = () => {
     <>
       {!created ? (
         <div
-          className={`h-[100vh] w-[100%] flex justify-center items-center flex-col`}
+          className={`h-[100vh] w-[100vw] flex justify-center items-center flex-col`}
         >
           <img src={logo} alt="logo" className="" />
           <Button
@@ -55,21 +59,30 @@ const Main = () => {
           </Button>
         </div>
       ) : (
-        <div id="container" className="flex justify-center">
-          <div className="bg-black-300 w-[300px]">
-            <form onSubmit={submitEvent} className={`${formStyle}`}>
-              <input
-                className="bg-green-500"
-                type="number"
-                onChange={kileEvent}
-              />
-              <select onChange={genderEvent}>
+        <div id="container" className="h-[100vh] w-[100vw] flex justify-center">
+          <div className="bg-black-300 w-[300px] flex flex-col justify-center">
+            <form
+              onSubmit={submitEvent}
+              className={`${formStyle} flex flex-col items-center`}
+            >
+              <select
+                onChange={genderEvent}
+                className="bg-gray-50 border mb-4 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
                 <option value="Muško">Muško</option>
                 <option value="Žensko">Žensko</option>
               </select>
-              <button type="submit">Submit</button>
+              <Input
+                label="Tresi masu"
+                type="number"
+                onChange={kileEvent}
+                icon={<FaWeightHanging />}
+                className="appearance-none"
+              />
+              <Button type="submit" className="mt-3 ml-auto mr-auto">
+                Submit
+              </Button>
             </form>
-            <h1>Utapanje</h1>
             <Button
               variant="outlined"
               color="blue"
