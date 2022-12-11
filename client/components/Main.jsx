@@ -6,14 +6,16 @@ import logo from "../assets/logo.svg";
 const Main = () => {
   const g_alch = 10.428;
 
-  const [brojPica, setBrojPica] = useState(1);
-  const [kile, setKile] = useState(0);
   const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden");
   const [formStyle, setFormStyle] = useState("block");
-  const [BAC, setBAC] = useState(0);
+  const [pokreniIgruBtnStyle, setPokreniIgruBtnStyle] = useState("hiden");
+
+  const [kile, setKile] = useState(0);
+  const [ukupniBAC, setUkupniBAC] = useState(0);
+  const [trenutniBAC, setTrenutniBAC] = useState(0);
   const [created, setCreated] = useState(false);
   const [r, setR] = useState(0);
-  const [secondsPassed, setSecondsPassed] = useState(0)
+  const [secondsPassed, setSecondsPassed] = useState(0);
 
   const kileEvent = (event) => {
     setKile(event.target.value * 1000);
@@ -31,26 +33,36 @@ const Main = () => {
 
   const submitEvent = (event) => {
     event.preventDefault();
-    setButtonAndBacStyle("block");
-    setFormStyle("hidden");
-  };
-
-  useEffect(() => {
-    
-    let timer = setTimeout(() => {
-      setSecondsPassed(secondsPassed + 1)
-    }, 1000)
-    
-    return () => {
-       clearTimeout(timer)
+    if (r == 0 || kile == 0) {
+      alert("Niste unijeli masu ili odabrali spol");
+    } else {
+      setFormStyle("hidden");
+      setPokreniIgruBtnStyle("block");
     }
-  }, [BAC])
-  
+  };
+  useEffect(() => {
+    console.log(secondsPassed);
+    let timer = setTimeout(() => {
+      setSecondsPassed(secondsPassed + 1);
+      setUkupniBAC(ukupniBAC - secondsPassed * (1 / 12) * 0.15 + trenutniBAC);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [pokreniIgruBtnStyle]);
+
+  const startGameEvent = () => {
+    setPokreniIgruBtnStyle("hidden");
+    setButtonAndBacStyle("block");
+  };
 
   const shootEvent = () => {
-    setBrojPica((count) => count + 1);
-    setBAC(((brojPica * g_alch) / (kile * r)) * 1000);
+    setTrenutniBAC(
+      (g_alch / (kile * r)) * 1000 - brojSekundi * (1 / 12) * 0.15
+    );
   };
+
   return (
     <>
       {!created ? (
@@ -77,22 +89,33 @@ const Main = () => {
                 onChange={kileEvent}
               />
               <select onChange={genderEvent}>
-                <option value="" selected disabled hidden></option>
+                <option value="" selected disabled hidden>
+                  Odaberi spol
+                </option>
                 <option value="Muško">Muško</option>
                 <option value="Žensko">Žensko</option>
               </select>
               <button type="submit">Submit</button>
             </form>
-            
+
             <Button
               variant="outlined"
               color="blue"
+              className={`${pokreniIgruBtnStyle}`}
+              onClick={startGameEvent}
+            >
+              Pokreni igru
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="green"
               className={`${buttonAndBacStyle}`}
               onClick={shootEvent}
             >
               Šotiraj
             </Button>
-            <span className={`${buttonAndBacStyle}`}>{BAC}</span>
+            <span className={`${buttonAndBacStyle}`}>{ukupniBAC}</span>
           </div>
         </div>
       )}
