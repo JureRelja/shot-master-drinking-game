@@ -17,7 +17,7 @@ const Character = () => {
   return transitions(({ opacity }, item) =>
     item ? (
       <animated.div
-        className="absolute top-40"
+        className="absolute top-40 -z-10"
         style={{
           opacity: opacity.to({ range: [0.0, 1.0], output: [0, 1] }),
         }}
@@ -26,7 +26,7 @@ const Character = () => {
       </animated.div>
     ) : (
       <animated.div
-        className="absolute top-40"
+        className="absolute top-40 -z-10"
         style={{
           opacity: opacity.to({ range: [1.0, 0.0], output: [1, 0] }),
         }}

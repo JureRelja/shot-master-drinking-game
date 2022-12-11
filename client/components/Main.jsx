@@ -23,8 +23,6 @@ const Main = () => {
   };
 
   const genderEvent = (event) => {
-    console.log(event.target.value);
-    //console.log(gender)
     if (event.target.value == "Žensko") {
       setR(0.55);
     } else if (event.target.value == "Muško") {
