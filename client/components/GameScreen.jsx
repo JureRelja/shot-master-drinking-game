@@ -5,11 +5,11 @@ import Character from "./Character";
 
 const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
   const g_alch = 10.428;
-  const [ukupniBAC, setUkupniBAC] = useState(0);
-  const [i, setI] = useState(0);
+  const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
+  const [i, setI] = useState(0); //Ako je i=1, igra počinje
   const [poruka, setPoruka] = useState("");
-  const [preostaloVrijeme, setPreostaloVrijeme] = useState(60);
-  const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60);
+  const [preostaloVrijeme, setPreostaloVrijeme] = useState(60); //Stvarno preostalo vrijeme s decimalama
+  const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60); //Preostalo vrijeme koje se prikazuje na ekranu bez decimala
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
@@ -29,6 +29,7 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
         } else {
           setUkupniBAC(ukupniBAC - (1 / 120) * 0.15);
         }
+        setPreostaloVrijeme(preostaloVrijeme - 0.1);
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
       }, 100);
       return () => clearInterval(setTimer);
