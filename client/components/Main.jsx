@@ -40,26 +40,28 @@ const Main = () => {
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      setCreated(false);
+      setButtonAndBacStyle("block");
     }
   };
+
+  const shootEvent = () => {
+    setTrenutniBAC((g_alch / (kile * r)) * 1000);
+    setUkupniBAC(trenutniBAC + ukupniBAC);
+  };
+
   useEffect(() => {
-    console.log(secondsPassed);
     let timer = setTimeout(() => {
-      setSecondsPassed(secondsPassed + 1);
-      setUkupniBAC(ukupniBAC - secondsPassed * (1 / 12) * 0.15 + trenutniBAC);
+      setUkupniBAC(ukupniBAC - (1 / 12) * 0.15);
     }, 1000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [pokreniIgruBtnStyle]);
+  });
 
-  const shootEvent = () => {
-    setTrenutniBAC(
-      (g_alch / (kile * r)) * 1000 - brojSekundi * (1 / 12) * 0.15
-    );
-  };
+  let timer = setTimeout(() => {
+    setUkupniBAC(ukupniBAC - (1 / 12) * 0.15);
+  }, 1000);
 
   return (
     <>
