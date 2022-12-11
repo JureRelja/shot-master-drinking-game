@@ -9,7 +9,7 @@ const http = require("http").Server(app);
 const cors = require("cors");
 
 app.use(cors());
-
+//Masa je mama
 const socketIO = require("socket.io")(http, {
   cors: {
     origin: "http://localhost:5173",
