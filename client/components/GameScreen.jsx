@@ -8,24 +8,32 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
   const [ukupniBAC, setUkupniBAC] = useState(0);
   const [i, setI] = useState(0);
   const [protekloVrijeme, setProtekloVrijeme] = useState(0);
+  const [poruka, setPoruka] = useState("");
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
     setI(i + 1);
-    if ((i = 1)) {
-      let setTimer = setInterval(() => {
-        if (ukupniBAC - (1 / 12) * 0.15 <= 0) {
-          setUkupniBAC(0);
-        } else {
-          setUkupniBAC(ukupniBAC - (1 / 12) * 0.15);
-        }
-        setProtekloVrijeme(protekloVrijeme + 1);
-        if (protekloVrijeme > 10) {
-        }
-      }, 1000);
-      return () => clearInterval(setTimer);
+    if (ukupniBAC < 2 && ukupniBAC > 1) {
+      setPoruka("Pomalo rodijače");
+    } else if (ukupniBAC > 4.6) {
+      setPoruka("Rodijače oš ti zaronit");
     }
   };
+
+  useEffect(() => {
+    if (i != 0 && protekloVrijeme <= 60) {
+      let setTimer = setInterval(() => {
+        if (ukupniBAC - (1 / 120) * 0.15 <= 0) {
+          setUkupniBAC(0);
+        } else {
+          setUkupniBAC(ukupniBAC - (1 / 120) * 0.15);
+        }
+        setProtekloVrijeme(protekloVrijeme + 0.1);
+        console.log(protekloVrijeme);
+      }, 100);
+      return () => clearInterval(setTimer);
+    }
+  });
 
   return (
     <>
@@ -45,7 +53,7 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
           >
             Šotiraj
           </Button>
-          <span>{ukupniBAC}</span>
+          <span>{poruka}</span>
         </div>
         <div
           id="second_player"
