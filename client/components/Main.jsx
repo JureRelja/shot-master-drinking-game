@@ -83,7 +83,7 @@ const Main = () => {
               </select>
               <button type="submit">Submit</button>
             </form>
-            <h1>Utapanje</h1>
+            
             <Button
               variant="outlined"
               color="blue"
