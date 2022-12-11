@@ -6,13 +6,14 @@ import { Input } from "@material-tailwind/react";
 import "./main.css";
 
 import { FaWeightHanging } from "react-icons/fa";
+import GameScreen from "./GameScreen";
 
 const Main = () => {
   const g_alch = 10.428;
 
   const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden");
+  const [hideInputScreen, setHideInputScreen] = useState("");
   const [formStyle, setFormStyle] = useState("block");
-  const [pokreniIgruBtnStyle, setPokreniIgruBtnStyle] = useState("hiden");
 
   const [kile, setKile] = useState(0);
   const [ukupniBAC, setUkupniBAC] = useState(0);
@@ -20,6 +21,8 @@ const Main = () => {
   const [created, setCreated] = useState(false);
   const [r, setR] = useState(0);
   const [secondsPassed, setSecondsPassed] = useState(0);
+
+  const [startGame, setStartGame] = useState(false);
 
   const kileEvent = (event) => {
     setKile(event.target.value * 1000);
@@ -40,7 +43,8 @@ const Main = () => {
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      setButtonAndBacStyle("block");
+      setHideInputScreen("hidden");
+      setStartGame(true);
     }
   };
 
@@ -65,13 +69,14 @@ const Main = () => {
 
   return (
     <>
+      {startGame && <GameScreen />}
       {!created ? (
         <div
           className={`h-[100vh] w-[100vw] flex justify-center items-center flex-col`}
         >
           <img src={logo} alt="logo" className="" />
           <Button
-            className={`h-[40px] ${pokreniIgruBtnStyle}`}
+            className={`h-[40px]`}
             onClick={() => {
               setCreated(true);
               startGameEvent;
@@ -81,7 +86,10 @@ const Main = () => {
           </Button>
         </div>
       ) : (
-        <div id="container" className="h-[100vh] w-[100vw] flex justify-center">
+        <div
+          id="container"
+          className={`h-[100vh] w-[100vw] flex justify-center ${hideInputScreen}`}
+        >
           <div className="bg-black-300 w-[300px] flex flex-col justify-center">
             <form
               onSubmit={submitEvent}
