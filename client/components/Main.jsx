@@ -13,6 +13,7 @@ const Main = () => {
   const [BAC, setBAC] = useState(0);
   const [created, setCreated] = useState(false);
   const [r, setR] = useState(0);
+  const [secondsPassed, setSecondsPassed] = useState(0)
 
   const kileEvent = (event) => {
     setKile(event.target.value * 1000);
@@ -33,6 +34,18 @@ const Main = () => {
     setButtonAndBacStyle("block");
     setFormStyle("hidden");
   };
+
+  useEffect(() => {
+    
+    let timer = setTimeout(() => {
+      setSecondsPassed(secondsPassed + 1)
+    }, 1000)
+    
+    return () => {
+       clearTimeout(timer)
+    }
+  }, [BAC])
+  
 
   const shootEvent = () => {
     setBrojPica((count) => count + 1);
@@ -64,6 +77,7 @@ const Main = () => {
                 onChange={kileEvent}
               />
               <select onChange={genderEvent}>
+                <option value="" selected disabled hidden></option>
                 <option value="Muško">Muško</option>
                 <option value="Žensko">Žensko</option>
               </select>
