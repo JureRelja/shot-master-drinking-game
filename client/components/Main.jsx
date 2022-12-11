@@ -40,8 +40,7 @@ const Main = () => {
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      setFormStyle("hidden");
-      setPokreniIgruBtnStyle("block");
+      setCreated(false);
     }
   };
   useEffect(() => {
@@ -55,11 +54,6 @@ const Main = () => {
       clearTimeout(timer);
     };
   }, [pokreniIgruBtnStyle]);
-
-  const startGameEvent = () => {
-    setPokreniIgruBtnStyle("hidden");
-    setButtonAndBacStyle("block");
-  };
 
   const shootEvent = () => {
     setTrenutniBAC(
