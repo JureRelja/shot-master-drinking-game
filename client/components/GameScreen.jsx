@@ -1,31 +1,39 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMountEffect } from "react";
 import { Button } from "@material-tailwind/react";
 import Character from "./Character";
 
 const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
   const g_alch = 10.428;
   const [ukupniBAC, setUkupniBAC] = useState(0);
-  const [trenutniBAC, setTrenutniBAC] = useState(0);
+  const [i, setI] = useState(0);
+  const [protekloVrijeme, setProtekloVrijeme] = useState(0);
+  const [poruka, setPoruka] = useState("");
 
   const shootEvent = () => {
-    setTrenutniBAC((g_alch / (kile * r)) * 1000);
-    setUkupniBAC(trenutniBAC + ukupniBAC);
+    setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
+    setI(i + 1);
+    if (ukupniBAC < 2 && ukupniBAC > 1) {
+      setPoruka("Pomalo rodijače");
+    } else if (ukupniBAC > 4.6) {
+      setPoruka("Rodijače oš ti zaronit");
+    }
   };
 
   useEffect(() => {
-    let timer = setTimeout(() => {
-      setUkupniBAC(ukupniBAC - (1 / 12) * 0.15);
-    }, 1000);
-
-    return () => {
-      clearTimeout(timer);
-    };
+    if (i != 0 && protekloVrijeme <= 60) {
+      let setTimer = setInterval(() => {
+        if (ukupniBAC - (1 / 120) * 0.15 <= 0) {
+          setUkupniBAC(0);
+        } else {
+          setUkupniBAC(ukupniBAC - (1 / 120) * 0.15);
+        }
+        setProtekloVrijeme(protekloVrijeme + 0.1);
+        console.log(protekloVrijeme);
+      }, 100);
+      return () => clearInterval(setTimer);
+    }
   });
-
-  let timer = setTimeout(() => {
-    setUkupniBAC(ukupniBAC - (1 / 12) * 0.15);
-  }, 1000);
 
   return (
     <>
@@ -45,7 +53,7 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
           >
             Šotiraj
           </Button>
-          <span>{ukupniBAC}</span>
+          <span>{poruka}</span>
         </div>
         <div
           id="second_player"
