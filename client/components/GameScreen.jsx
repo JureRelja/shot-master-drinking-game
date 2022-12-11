@@ -8,8 +8,8 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
   const socket = socketIO.connect("http://localhost:4000");
 
   const g_alch = 10.428;
-  const [ukupniBAC, setUkupniBAC] = useState(0);
-  const [i, setI] = useState(0);
+  const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
+  const [i, setI] = useState(0); //Ako je i=1, igra počinje
   const [poruka, setPoruka] = useState("");
   const [showButton, setShowButton] = useState("hidden");
   const [preostaloVrijeme, setPreostaloVrijeme] = useState(60);
@@ -17,12 +17,15 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
-    setI(i + 1);
     if (ukupniBAC < 2 && ukupniBAC > 1) {
       setPoruka("Pomalo rodijače");
     } else if (ukupniBAC > 4.6) {
       setPoruka("Rodijače oš ti zaronit");
     }
+  };
+
+  const startTimerEvent = () => {
+    setI(i + 1);
   };
 
   useEffect(() => {
@@ -33,6 +36,7 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
         } else {
           setUkupniBAC(ukupniBAC - (1 / 120) * 0.15);
         }
+        setPreostaloVrijeme(preostaloVrijeme - 0.1);
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
       }, 100);
       return () => clearInterval(setTimer);
@@ -50,9 +54,8 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
         >
           <Character />
           <Button
-            className={`h-[40px] ${showButton}`}
-            variant="outlined"
-            color="green"
+            className={`h-[40px] bg-red-900 ${showButton}`}
+            onClick={shootEvent}
           >
             Šotiraj
           </Button>
@@ -66,7 +69,7 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
             color="green"
             onClick={() => {
               setShowButton("block");
-              shootEvent;
+              startTimerEvent();
             }}
             className=""
           >
