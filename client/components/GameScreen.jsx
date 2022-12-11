@@ -7,8 +7,8 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
   const g_alch = 10.428;
   const [ukupniBAC, setUkupniBAC] = useState(0);
   const [i, setI] = useState(0);
-  const [protekloVrijeme, setProtekloVrijeme] = useState(0);
   const [poruka, setPoruka] = useState("");
+  const [preostaloVrijeme, setPreostaloVrijem] = useState(0);
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
@@ -21,15 +21,14 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
   };
 
   useEffect(() => {
-    if (i != 0 && protekloVrijeme <= 60) {
+    if (i != 0 && preostaloVrijeme <= 0) {
       let setTimer = setInterval(() => {
         if (ukupniBAC - (1 / 120) * 0.15 <= 0) {
           setUkupniBAC(0);
         } else {
           setUkupniBAC(ukupniBAC - (1 / 120) * 0.15);
         }
-        setProtekloVrijeme(protekloVrijeme + 0.1);
-        console.log(protekloVrijeme);
+        setPreostaloVrijem(60 - 0.1);
       }, 100);
       return () => clearInterval(setTimer);
     }
@@ -59,6 +58,7 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
           id="second_player"
           className="flex flex-col justify-center w-[30%]"
         >
+          <span>Preostalo vrijeme: {preostaloVrijeme}</span>
           <Character />
           <span>Oponent Took a Shoot</span>
         </div>
