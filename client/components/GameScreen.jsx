@@ -8,8 +8,9 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
   const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
   const [poruka, setPoruka] = useState("");
-  const [preostaloVrijeme, setPreostaloVrijeme] = useState(60); //Stvarno preostalo vrijeme s decimalama
-  const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60); //Preostalo vrijeme koje se prikazuje na ekranu bez decimala
+  const [showButton, setShowButton] = useState("hidden");
+  const [preostaloVrijeme, setPreostaloVrijeme] = useState(60);
+  const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60);
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
@@ -47,14 +48,28 @@ const GameScreen = ({ r, kile, buttonAndBacStyle }) => {
         >
           <Character />
           <Button
-            className="h-[40px]"
+            className={`h-[40px] ${showButton}`}
             variant="outlined"
             color="green"
-            onClick={shootEvent}
           >
             Šotiraj
           </Button>
           <span>{poruka}</span>
+        </div>
+        <div className="flex flex-col justify-evenly">
+          <div id="timer">
+            <span className="">Timer</span>
+          </div>
+          <Button
+            color="green"
+            onClick={() => {
+              setShowButton("block");
+              shootEvent;
+            }}
+            className=""
+          >
+            Start Game
+          </Button>
         </div>
         <div
           id="second_player"
