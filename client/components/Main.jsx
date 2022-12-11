@@ -10,13 +10,16 @@ import { FaWeightHanging } from "react-icons/fa";
 const Main = () => {
   const g_alch = 10.428;
 
-  const [brojPica, setBrojPica] = useState(1);
-  const [kile, setKile] = useState(0);
   const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden");
   const [formStyle, setFormStyle] = useState("block");
-  const [BAC, setBAC] = useState(0);
+  const [pokreniIgruBtnStyle, setPokreniIgruBtnStyle] = useState("hiden");
+
+  const [kile, setKile] = useState(0);
+  const [ukupniBAC, setUkupniBAC] = useState(0);
+  const [trenutniBAC, setTrenutniBAC] = useState(0);
   const [created, setCreated] = useState(false);
   const [r, setR] = useState(0);
+  const [secondsPassed, setSecondsPassed] = useState(0);
 
   const kileEvent = (event) => {
     setKile(event.target.value * 1000);
@@ -34,14 +37,36 @@ const Main = () => {
 
   const submitEvent = (event) => {
     event.preventDefault();
+    if (r == 0 || kile == 0) {
+      alert("Niste unijeli masu ili odabrali spol");
+    } else {
+      setFormStyle("hidden");
+      setPokreniIgruBtnStyle("block");
+    }
+  };
+  useEffect(() => {
+    console.log(secondsPassed);
+    let timer = setTimeout(() => {
+      setSecondsPassed(secondsPassed + 1);
+      setUkupniBAC(ukupniBAC - secondsPassed * (1 / 12) * 0.15 + trenutniBAC);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [pokreniIgruBtnStyle]);
+
+  const startGameEvent = () => {
+    setPokreniIgruBtnStyle("hidden");
     setButtonAndBacStyle("block");
-    setFormStyle("hidden");
   };
 
   const shootEvent = () => {
-    setBrojPica((count) => count + 1);
-    setBAC(((brojPica * g_alch) / (kile * r)) * 1000);
+    setTrenutniBAC(
+      (g_alch / (kile * r)) * 1000 - brojSekundi * (1 / 12) * 0.15
+    );
   };
+
   return (
     <>
       {!created ? (
@@ -50,9 +75,10 @@ const Main = () => {
         >
           <img src={logo} alt="logo" className="" />
           <Button
-            className="h-[40px]"
+            className={`h-[40px] ${pokreniIgruBtnStyle}`}
             onClick={() => {
               setCreated(true);
+              startGameEvent;
             }}
           >
             Create Game
@@ -69,6 +95,9 @@ const Main = () => {
                 onChange={genderEvent}
                 className="bg-gray-50 border mb-4 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="" selected disabled hidden>
+                  Odaberi spol
+                </option>
                 <option value="Muško">Muško</option>
                 <option value="Žensko">Žensko</option>
               </select>
@@ -83,15 +112,16 @@ const Main = () => {
                 Submit
               </Button>
             </form>
+
             <Button
               variant="outlined"
-              color="blue"
+              color="green"
               className={`${buttonAndBacStyle}`}
               onClick={shootEvent}
             >
               Šotiraj
             </Button>
-            <span className={`${buttonAndBacStyle}`}>{BAC}</span>
+            <span className={`${buttonAndBacStyle}`}>{ukupniBAC}</span>
           </div>
         </div>
       )}
