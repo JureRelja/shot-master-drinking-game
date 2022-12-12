@@ -4,6 +4,7 @@ import { Button } from "@material-tailwind/react";
 import logo from "../assets/logo.gif";
 import { Input } from "@material-tailwind/react";
 import "./main.css";
+import socketIO from "socket.io-client";
 
 import { FaWeightHanging } from "react-icons/fa";
 import GameScreen from "./GameScreen";
@@ -38,6 +39,7 @@ const Main = () => {
       setHideInputScreen("hidden");
       setStartGame(true);
       setButtonAndBacStyle("block");
+      const socket = socketIO.connect("http://localhost:4000");
     }
   };
 
