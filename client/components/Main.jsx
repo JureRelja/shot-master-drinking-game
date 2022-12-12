@@ -19,6 +19,8 @@ const Main = () => {
   const [startGame, setStartGame] = useState(false);
   const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden");
 
+  const [socket, setSocket] = useState("");
+
   const kileEvent = (event) => {
     setKile(event.target.value * 1000);
   };
@@ -39,14 +41,19 @@ const Main = () => {
       setHideInputScreen("hidden");
       setStartGame(true);
       setButtonAndBacStyle("block");
-      const socket = socketIO.connect("http://localhost:4000");
+      setSocket(socketIO.connect("http://localhost:4000"));
     }
   };
 
   return (
     <>
       {startGame && (
-        <GameScreen r={r} kile={kile} buttonAndBacStyle={buttonAndBacStyle} />
+        <GameScreen
+          r={r}
+          kile={kile}
+          buttonAndBacStyle={buttonAndBacStyle}
+          socket={socket}
+        />
       )}
       {!created ? (
         <div
