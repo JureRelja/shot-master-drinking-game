@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useTransition, animated } from "react-spring";
 import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
 
-const Character = () => {
+const Character = ({ socket }) => {
   const [toggle, set] = useState(false);
+
   const transitions = useTransition(toggle, {
     from: { position: "absolute", opacity: 0 },
     enter: { opacity: 1 },

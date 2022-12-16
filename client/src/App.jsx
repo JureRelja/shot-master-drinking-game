@@ -3,9 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "../components/chat/Home";
 import ChatPage from "../components/chat/ChatPage";
-import socketIO from "socket.io-client";
 
-const socket = socketIO.connect("http://localhost:4000");
 export default function App() {
   return (
     <>

@@ -16,8 +16,9 @@ let users = [];
 socketIO.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
-  socket.on("message", (data) => {
-    socketIO.emit("messageResponse", data);
+  socket.on("Casa", (data) => {
+    console.log("🚀: Shoot", data);
+    socketIO.emit("onShoot", data);
   });
 
   socket.on("newUser", (data) => {
