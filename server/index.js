@@ -12,18 +12,21 @@ const socketIO = require("socket.io")(http, {
 });
 
 let users = [];
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
 
 socketIO.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
-  socket.on("Casa", (data) => {
-    console.log("🚀: Shoot", data);
-    socketIO.emit("onShoot", data);
+  socket.on("startGame", (e) => {
+    console.log("Game", e);
+    socketIO.emit("BacTarget", getRandomArbitrary(2, 3));
   });
 
-  socket.on("newUser", (data) => {
+  socket.on("ShootEvent", (e) => {
     //Adds the new user to the list of users
-    users.push(data);
+    //users.push(data);
     //Sends the list of users to the client
     socketIO.emit("newUserResponse", users);
   });

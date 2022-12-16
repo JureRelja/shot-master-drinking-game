@@ -16,6 +16,12 @@ const Character = ({ socket }) => {
     onRest: () => set(!toggle),
   });
 
+  useEffect(() => {
+    socket.on("onShoot", (ukupniBAC) => {
+      console.log(ukupniBAC);
+    });
+  }, []);
+
   return transitions(({ opacity }, item) =>
     item ? (
       <animated.div

@@ -13,15 +13,18 @@ const Main = () => {
 
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
+  const [userName, setUserName] = useState("");
 
   const [created, setCreated] = useState(false);
   const [startGame, setStartGame] = useState(false);
   const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden");
 
-  const [socket, setSocket] = useState("");
-
   const kileEvent = (event) => {
     setKile(event.target.value * 1000);
+  };
+
+  const userNameEvent = (event) => {
+    setUserName(event.target.value);
   };
 
   const genderEvent = (event) => {
@@ -70,6 +73,12 @@ const Main = () => {
         >
           <div className="bg-black-300 w-[300px] flex flex-col justify-center">
             <form onSubmit={submitEvent} className="flex flex-col items-center">
+              <Input
+                label="Ime"
+                type="text"
+                onChange={userNameEvent}
+                className="appearance-none"
+              />
               <select
                 onChange={genderEvent}
                 className="bg-gray-50 border mb-4 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
