@@ -7,10 +7,12 @@ import "./main.css";
 import socketIO from "socket.io-client";
 import { FaWeightHanging } from "react-icons/fa";
 import GameScreen from "./GameScreen";
+import { useNavigate } from "react-router-dom";
 
 const socket = socketIO("http://localhost:4000");
 const Main = () => {
   const [hideInputScreen, setHideInputScreen] = useState("");
+  const navigate = useNavigate();
 
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
@@ -21,6 +23,7 @@ const Main = () => {
   const [gameCreator, setGameCreator] = useState(true);
 
   const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden");
+  const [roomID, setRoomID] = useState("");
 
   const kileEvent = (event) => {
     setKile(event.target.value * 1000);
@@ -46,12 +49,18 @@ const Main = () => {
     } else {
       localStorage.setItem("userName", userName);
       //Spajanje igrača na server
-      socket.emit("connectedToGame", {
+      if (roomID == "") {
+        setRoomID(`${socket.id}${Math.random()}`);
+      }
+
+      socket.emit("connectedToRoom", {
         userName,
         socketID: socket.id,
         gameCreator,
-        lobbyID: `${socket.id}${Math.random()}`,
+        roomID,
       });
+      navigate(`/?roomID=${roomID}`);
+      console.log(roomID);
 
       setHideInputScreen("hidden");
       setStartGame(true);
@@ -122,6 +131,13 @@ const Main = () => {
                 type="number"
                 onChange={kileEvent}
                 icon={<FaWeightHanging />}
+                className="appearance-none"
+              />
+              <Input
+                label="roomID"
+                type="text"
+                value={roomID}
+                onChange={(e) => setRoomID(e.target.value)}
                 className="appearance-none"
               />
               <Button type="submit" className="mt-3 ml-auto mr-auto">

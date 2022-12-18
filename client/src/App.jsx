@@ -1,9 +1,14 @@
 import { Main } from "../components";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {
   return (
     <>
-      <Main />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Main />}></Route>
+        </Routes>
+      </BrowserRouter>
     </>
     // <BrowserRouter>
     //   <div>

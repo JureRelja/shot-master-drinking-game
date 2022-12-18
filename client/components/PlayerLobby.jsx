@@ -6,7 +6,9 @@ const PlayerLobby = ({ socket }) => {
 
   useEffect(() => {
     console.log("Novi igraČ");
-    socket.on("ConnectedToGameResponse", (data) => setIgraci(data));
+    socket.on("ConnectedToGameResponse", (data) =>
+      setIgraci([...igraci, data])
+    );
   }, [socket, igraci]);
 
   return (
@@ -16,9 +18,7 @@ const PlayerLobby = ({ socket }) => {
           igraci.map((igrac) =>
             igrac.userName === localStorage.getItem("userName") ? (
               <li key={igrac.socketID}>{igrac.userName}</li>
-            ) : (
-              <h1>Nije tvoj game</h1>
-            )
+            ) : null
           )}
       </ul>
     </>

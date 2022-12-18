@@ -7,7 +7,7 @@ import pije from "../assets/pije.svg";
 import { useSpring, animated } from "react-spring";
 import PlayerLobby from "./PlayerLobby";
 
-const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
+const GameScreen = ({ r, kile, buttonAndBacStyle, socket, gameCreator }) => {
   const g_alch = 10.428;
   const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
@@ -89,9 +89,9 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
               <img src={odmara} alt="" />
             )} */}
           </div>
-          <Button onClick={setChangeImage(true)} className="mt-4 w-[200px]">
+          {/* <Button onClick={setChangeImage(true)} className="mt-4 w-[200px]">
             Test
-          </Button>
+          </Button> */}
 
           <Button
             className={`h-[40px] bg-red-900 ${showButton}`}
