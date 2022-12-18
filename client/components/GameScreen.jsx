@@ -1,7 +1,29 @@
 import React from "react";
 import { useState, useEffect, useMountEffect } from "react";
 import { Button } from "@material-tailwind/react";
+import Character from "./Character";
+import odmara from "../assets/odmara.svg";
+import pije from "../assets/pije.svg";
+import { useSpring, animated } from "react-spring";
 import PlayerLobby from "./PlayerLobby";
+
+const Text1 = ({ on }) => {
+  const props = useSpring({ opacity: on ? 1 : 0, from: { opacity: 0 } });
+  return (
+    <animated.div style={props}>
+      <img src={pije} className="w-[250px]" />
+    </animated.div>
+  );
+};
+
+const Text2 = () => {
+  const props = useSpring({ opacity: 1, from: { opacity: 0 } });
+  return (
+    <animated.div style={props}>
+      <img src={odmara} className="w-[250px] absolute" />
+    </animated.div>
+  );
+};
 
 const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
   const g_alch = 10.428;
@@ -12,6 +34,13 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
   const [preostaloVrijeme, setPreostaloVrijeme] = useState(60);
   const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60);
   const [ciljaniBAC, setCiljaniBAC] = useState(0);
+
+  const [animationStarted, setAnimationStarted] = useState(false);
+  const [on, set] = React.useState(true);
+
+  const startAnimation = () => {
+    setAnimationStarted(true);
+  };
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
@@ -59,24 +88,35 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
 
   return (
     <>
+      <PlayerLobby socket={socket} />
       <div
         className={`flex h-[100vh] w-[100vw] justify-center ${buttonAndBacStyle}`}
       >
         <PlayerLobby socket={socket} />
-        {/* <div
+        <div
           id="first_player"
           className="flex flex-col justify-center w-[30%] border-red-200"
         >
-          <Character socket={socket} />
+          <div
+            id="character"
+            className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
+          >
+            <Text1 on={on} />
+            <Text2 key={on} />
+            <button onClick={() => set(!on)}>{on ? "On" : "Off"}</button>
+          </div>
 
+          <Button
+            className={`h-[40px] bg-red-900 ${showButton}`}
+            onClick={() => {
+              shootEvent;
+              startAnimation;
+            }}
+          >
+            Šotiraj
+          </Button>
           <span>{poruka}</span>
-        </div> */}
-        <Button
-          className={`h-[40px] bg-red-900 ${showButton}`}
-          onClick={shootEvent}
-        >
-          Šotiraj
-        </Button>
+        </div>
         <div className="flex flex-col justify-evenly">
           <div id="timer">
             <span className="">Timer: {vrijemeUSekundama}</span>
@@ -97,6 +137,9 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
           id="second_player"
           className="flex flex-col justify-center w-[30%]"
         >
+          <span>Preostalo vrijeme: {vrijemeUSekundama}</span>
+          <img src={odmara} alt="odmara" className="w-[250px]" />
+          <img src={pije} alt="pije" className="w-[250px]" />
           <span>Oponent Took a Shoot</span>
         </div>
       </div>
