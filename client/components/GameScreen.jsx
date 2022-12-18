@@ -92,7 +92,6 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
       <div
         className={`flex h-[100vh] w-[100vw] justify-center ${buttonAndBacStyle}`}
       >
-        <PlayerLobby socket={socket} />
         <div
           id="first_player"
           className="flex flex-col justify-center w-[30%] border-red-200"
