@@ -9,7 +9,6 @@ import { FaWeightHanging } from "react-icons/fa";
 import GameScreen from "./GameScreen";
 import { useNavigate } from "react-router-dom";
 
-const socket = socketIO("http://localhost:4000");
 const Main = () => {
   const [hideInputScreen, setHideInputScreen] = useState("");
   const navigate = useNavigate();

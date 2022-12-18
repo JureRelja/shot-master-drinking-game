@@ -1,23 +1,22 @@
-import { Main } from "../components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "../components/HomePage";
+import LoginPage from "../components/LoginPage";
+import GamePage from "../components/GamePage";
+import Test from "../components/Test";
+import socketIO from "socket.io-client";
 
+const socket = socketIO("http://localhost:4000");
 export default function App() {
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      <div>
         <Routes>
-          <Route path="/" element={<Main />}></Route>
+          <Route path="/" element={<HomePage socket={socket} />}></Route>
+          <Route path="/login" element={<LoginPage socket={socket} />}></Route>
+          <Route path="/game" element={<GamePage socket={socket} />}></Route>
+          <Route path="/test" element={<Test />}></Route>
         </Routes>
-      </BrowserRouter>
-    </>
-    // <BrowserRouter>
-    //   <div>
-    //     <Routes>
-    //       <Route path="/" element={<Home socket={socket} />}></Route>
-
-    //       <Route path="/chat" element={<ChatPage socket={socket} />}></Route>
-    //     </Routes>
-    //   </div>
-    // </BrowserRouter>
+      </div>
+    </BrowserRouter>
   );
 }
