@@ -7,25 +7,7 @@ import pije from "../assets/pije.svg";
 import { useSpring, animated } from "react-spring";
 import PlayerLobby from "./PlayerLobby";
 
-const Text1 = ({ on }) => {
-  const props = useSpring({ opacity: on ? 1 : 0, from: { opacity: 0 } });
-  return (
-    <animated.div style={props}>
-      <img src={pije} className="w-[250px]" />
-    </animated.div>
-  );
-};
-
-const Text2 = () => {
-  const props = useSpring({ opacity: 1, from: { opacity: 0 } });
-  return (
-    <animated.div style={props}>
-      <img src={odmara} className="w-[250px] absolute" />
-    </animated.div>
-  );
-};
-
-const GameScreen = ({ r, kile, buttonAndBacStyle, socket, gameCreator }) => {
+const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
   const g_alch = 10.428;
   const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
@@ -36,7 +18,7 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket, gameCreator }) => {
   const [ciljaniBAC, setCiljaniBAC] = useState(0);
 
   const [animationStarted, setAnimationStarted] = useState(false);
-  const [on, set] = React.useState(true);
+  const [changeImage, setChangeImage] = useState(false);
 
   const startAnimation = () => {
     setAnimationStarted(true);
@@ -46,17 +28,12 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket, gameCreator }) => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
     socket.emit("ShootEvent", "ShootEvent");
   };
+
   if (ukupniBAC < 2 && ukupniBAC > 1) {
     setPoruka("Pomalo rodijače");
   } else if (ukupniBAC > 4.6) {
     setPoruka("Rodijače oš ti zaronit");
   }
-
-  useEffect(() => {
-    socket.on("BacTarget", (e) => {
-      setCiljaniBAC(Math.round(e * 100) / 100);
-    });
-  });
 
   const startTimerEvent = () => {
     socket.emit("startGame", "start");
@@ -64,6 +41,10 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket, gameCreator }) => {
   };
 
   useEffect(() => {
+    socket.on("BacTarget", (e) => {
+      console.log("Ciljani level alkhola u krvi: ", e);
+      setCiljaniBAC(Math.round(e * 100) / 100);
+    });
     if (i != 0 && preostaloVrijeme >= 0) {
       let setTimer = setInterval(() => {
         if (ukupniBAC - (1 / 120) * 0.15 <= 0) {
@@ -99,10 +80,18 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket, gameCreator }) => {
             id="character"
             className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
           >
-            <Text1 on={on} />
-            <Text2 key={on} />
-            <button onClick={() => set(!on)}>{on ? "On" : "Off"}</button>
+            {/* {changeImage ? (
+              () => {
+                setChangeImage(false);
+                return <img src={pije} alt="" className="absolute" />;
+              }
+            ) : (
+              <img src={odmara} alt="" />
+            )} */}
           </div>
+          <Button onClick={setChangeImage(true)} className="mt-4 w-[200px]">
+            Test
+          </Button>
 
           <Button
             className={`h-[40px] bg-red-900 ${showButton}`}
