@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useTransition, animated } from "react-spring";
 import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
 
-const Character = () => {
+const Character = ({}) => {
   const [toggle, set] = useState(false);
+
   const transitions = useTransition(toggle, {
     from: { position: "absolute", opacity: 0 },
     enter: { opacity: 1 },
@@ -13,6 +15,12 @@ const Character = () => {
     delay: 200,
     onRest: () => set(!toggle),
   });
+
+  // useEffect(() => {
+  //   socket.on("onShoot", (ukupniBAC) => {
+  //     console.log(ukupniBAC);
+  //   });
+  // }, []);
 
   return transitions(({ opacity }, item) =>
     item ? (
