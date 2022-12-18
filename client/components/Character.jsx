@@ -4,7 +4,7 @@ import { useTransition, animated } from "react-spring";
 import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
 
-const Character = ({ socket }) => {
+const Character = ({}) => {
   const [toggle, set] = useState(false);
 
   const transitions = useTransition(toggle, {
@@ -16,11 +16,11 @@ const Character = ({ socket }) => {
     onRest: () => set(!toggle),
   });
 
-  useEffect(() => {
-    socket.on("onShoot", (ukupniBAC) => {
-      console.log(ukupniBAC);
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on("onShoot", (ukupniBAC) => {
+  //     console.log(ukupniBAC);
+  //   });
+  // }, []);
 
   return transitions(({ opacity }, item) =>
     item ? (

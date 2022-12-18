@@ -4,11 +4,12 @@ import { Button } from "@material-tailwind/react";
 import logo from "../assets/logo.gif";
 import { Input } from "@material-tailwind/react";
 import "./main.css";
-
+import socketIO from "socket.io-client";
 import { FaWeightHanging } from "react-icons/fa";
 import GameScreen from "./GameScreen";
 
-const Main = () => {
+//const socket = socketIO("http://localhost:4000");
+const Main = ({ socket }) => {
   const [hideInputScreen, setHideInputScreen] = useState("");
 
   const [kile, setKile] = useState(0);
@@ -37,19 +38,33 @@ const Main = () => {
 
   const submitEvent = (event) => {
     event.preventDefault();
+
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
+      localStorage.setItem("userName", userName);
+      socket.emit("ConnectedToGame", {
+        userName,
+        socketID: socket.id,
+      });
+
       setHideInputScreen("hidden");
       setStartGame(true);
       setButtonAndBacStyle("block");
+
+      //Spajanje igrača na server
     }
   };
 
   return (
     <>
       {startGame && (
-        <GameScreen r={r} kile={kile} buttonAndBacStyle={buttonAndBacStyle} />
+        <GameScreen
+          r={r}
+          kile={kile}
+          buttonAndBacStyle={buttonAndBacStyle}
+          socket={socket}
+        />
       )}
       {!created ? (
         <div
@@ -76,12 +91,13 @@ const Main = () => {
               <Input
                 label="Ime"
                 type="text"
+                value={userName}
                 onChange={userNameEvent}
                 className="appearance-none"
               />
               <select
                 onChange={genderEvent}
-                className="bg-gray-50 border mb-4 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="mt-3 ml-auto mr-auto bg-gray-50 border mb-4 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option value="">Odaberi spol</option>
                 <option value="Muško">Muško</option>
