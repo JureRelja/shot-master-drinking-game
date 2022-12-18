@@ -8,7 +8,6 @@ import socketIO from "socket.io-client";
 import { FaWeightHanging } from "react-icons/fa";
 import GameScreen from "./GameScreen";
 
-const socket = socketIO("http://localhost:4000");
 const Main = () => {
   const [hideInputScreen, setHideInputScreen] = useState("");
 
