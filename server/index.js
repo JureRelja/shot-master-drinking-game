@@ -19,12 +19,19 @@ function getRandomArbitrary(min, max) {
 
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
+
   
-  //Spajanje igrača na igru
-  socket.on("ConnectedToGame", (igrac) => {
+  //Igrač se spaja na novu/postojeću igru
+  socket.on("connectedToGame", (igrac) => {
+    
   igraci.push(igrac)
   //Salje igračima listu igrača spajanje na igru
   socketIO.emit('ConnectedToGameResponse', igraci);
+  socket.emit('ConnectedToGameResponse', igrac);
+  })
+  //Igrač se spaja na postojeću igru
+  socket.on("joinnedGame", (igrac) => {
+    igraci.push(igrac)
   })
   //Kada igrač klikne na start igre, počinje igra
   socket.on("startGame", (e) => {

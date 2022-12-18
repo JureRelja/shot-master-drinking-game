@@ -18,6 +18,8 @@ const Main = () => {
 
   const [created, setCreated] = useState(false);
   const [startGame, setStartGame] = useState(false);
+  const [gameCreator, setGameCreator] = useState(true);
+
   const [buttonAndBacStyle, setButtonAndBacStyle] = useState("hidden");
 
   const kileEvent = (event) => {
@@ -44,9 +46,11 @@ const Main = () => {
     } else {
       localStorage.setItem("userName", userName);
       //Spajanje igrača na server
-      socket.emit("ConnectedToGame", {
+      socket.emit("connectedToGame", {
         userName,
         socketID: socket.id,
+        gameCreator,
+        lobbyID: `${socket.id}${Math.random()}`,
       });
 
       setHideInputScreen("hidden");
@@ -63,6 +67,7 @@ const Main = () => {
           kile={kile}
           buttonAndBacStyle={buttonAndBacStyle}
           socket={socket}
+          gameCreator={gameCreator}
         />
       )}
       {!created ? (
@@ -78,6 +83,16 @@ const Main = () => {
             }}
           >
             Create Game
+          </Button>
+          <Button
+            className={`h-[40px]`}
+            onClick={() => {
+              setCreated(true);
+              setStartGame(true);
+              setGameCreator(false);
+            }}
+          >
+            Join Game
           </Button>
         </div>
       ) : (

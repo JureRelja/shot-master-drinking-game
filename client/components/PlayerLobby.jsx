@@ -13,7 +13,13 @@ const PlayerLobby = ({ socket }) => {
     <>
       <ul>
         {igraci.length > 0 &&
-          igraci.map((igrac) => <li key={igrac.socketID}>{igrac.userName}</li>)}
+          igraci.map((igrac) =>
+            igrac.userName === localStorage.getItem("userName") ? (
+              <li key={igrac.socketID}>{igrac.userName}</li>
+            ) : (
+              <h1>Nije tvoj game</h1>
+            )
+          )}
       </ul>
     </>
   );

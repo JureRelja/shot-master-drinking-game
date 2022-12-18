@@ -25,7 +25,7 @@ const Text2 = () => {
   );
 };
 
-const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
+const GameScreen = ({ r, kile, buttonAndBacStyle, socket, gameCreator }) => {
   const g_alch = 10.428;
   const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
@@ -54,7 +54,6 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
 
   useEffect(() => {
     socket.on("BacTarget", (e) => {
-      console.log("Ciljani level alkhola u krvi: ", e);
       setCiljaniBAC(Math.round(e * 100) / 100);
     });
   });
@@ -81,10 +80,10 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
           });
           alert("Kraj igre");
         }
-      }, 10);
+      }, 100);
       return () => clearInterval(setTimer);
     }
-  });
+  }, [preostaloVrijeme, i]);
 
   return (
     <>
@@ -121,16 +120,18 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
             <span className="">Timer: {vrijemeUSekundama}</span>
           </div>
           <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
-          <Button
-            color="green"
-            onClick={() => {
-              setShowButton("block");
-              startTimerEvent();
-            }}
-            className=""
-          >
-            Start Game
-          </Button>
+          {gameCreator ? (
+            <Button
+              color="green"
+              onClick={() => {
+                setShowButton("block");
+                startTimerEvent();
+              }}
+              className=""
+            >
+              Start Game
+            </Button>
+          ) : null}
         </div>
         <div
           id="second_player"
