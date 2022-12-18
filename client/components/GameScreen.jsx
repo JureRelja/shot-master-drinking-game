@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMountEffect } from "react";
 import { Button } from "@material-tailwind/react";
-
 import PlayerLobby from "./PlayerLobby";
 
 const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
@@ -16,24 +15,23 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
-    //socket.emit("ShootEvent", "ShootEvent");
+    socket.emit("ShootEvent", "ShootEvent");
   };
-  // if (ukupniBAC < 2 && ukupniBAC > 1) {
-  //   setPoruka("Pomalo rodijače");
-  // } else if (ukupniBAC > 4.6) {
-  //   setPoruka("Rodijače oš ti zaronit");
-  // }
+  if (ukupniBAC < 2 && ukupniBAC > 1) {
+    setPoruka("Pomalo rodijače");
+  } else if (ukupniBAC > 4.6) {
+    setPoruka("Rodijače oš ti zaronit");
+  }
 
-  // useEffect(() => {
-  //   // socket.on("BacTarget", (e) => {
-  //   //   console.log("Ciljani level alkhola u krvi: ", e);
-  //   //   setCiljaniBAC(Math.round(e * 100) / 100);
-  //   // });
-  //   //socket.on("ConnectedToGameResponse", (data) => setIgraci(data));
-  // });
+  useEffect(() => {
+    socket.on("BacTarget", (e) => {
+      console.log("Ciljani level alkhola u krvi: ", e);
+      setCiljaniBAC(Math.round(e * 100) / 100);
+    });
+  });
 
   const startTimerEvent = () => {
-    //socket.emit("startGame", "start");
+    socket.emit("startGame", "start");
     setI(i + 1);
   };
 
@@ -48,10 +46,10 @@ const GameScreen = ({ r, kile, buttonAndBacStyle, socket }) => {
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
         if (preostaloVrijeme <= 0.1) {
-          // socket.emit("gameEnded", {
-          //   userName: localStorage.getItem("userName"),
-          //   BAC: ukupniBAC,
-          // });
+          socket.emit("gameEnded", {
+            userName: localStorage.getItem("userName"),
+            BAC: ukupniBAC,
+          });
           alert("Kraj igre");
         }
       }, 10);

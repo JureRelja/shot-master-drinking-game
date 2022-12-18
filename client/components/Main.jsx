@@ -8,8 +8,8 @@ import socketIO from "socket.io-client";
 import { FaWeightHanging } from "react-icons/fa";
 import GameScreen from "./GameScreen";
 
-//const socket = socketIO("http://localhost:4000");
-const Main = ({ socket }) => {
+const socket = socketIO("http://localhost:4000");
+const Main = () => {
   const [hideInputScreen, setHideInputScreen] = useState("");
 
   const [kile, setKile] = useState(0);
@@ -43,6 +43,7 @@ const Main = ({ socket }) => {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
       localStorage.setItem("userName", userName);
+      //Spajanje igrača na server
       socket.emit("ConnectedToGame", {
         userName,
         socketID: socket.id,
@@ -51,8 +52,6 @@ const Main = ({ socket }) => {
       setHideInputScreen("hidden");
       setStartGame(true);
       setButtonAndBacStyle("block");
-
-      //Spajanje igrača na server
     }
   };
 

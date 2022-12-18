@@ -18,39 +18,34 @@ function getRandomArbitrary(min, max) {
 }
 
 socketIO.on("connection", (socket) => {
-   console.log("🔥: A user connected");
-
-
-   socket.on("ConnectedToGame", (igrac) => {
-    igraci.push(igrac)
-    socketIO.emit('ConnectedToGameResponse', igraci);
-    console.log("igraci", igraci);
+  console.log("🔥: A user connected");
+  
+  //Spajanje igrača na igru
+  socket.on("ConnectedToGame", (igrac) => {
+  igraci.push(igrac)
+  //Salje igračima listu igrača spajanje na igru
+  socketIO.emit('ConnectedToGameResponse', igraci);
   })
-  //Naša igrica
-  // socket.on("startGame", (e) => {
-  //   console.log("Game", e);
-  //   socketIO.emit("BacTarget", getRandomArbitrary(2, 3));
-  // });
-
-  // socket.on("gameEnded", (e) => {
-  //   console.log("Pobjednik je", e.userName);
-  //   console.log("BAC", e.BAC);
-  // });
-
-  // socket.on("ShootEvent", (e) => {
-  //   //Adds the new user to the list of users
-  //   //users.push(data);
-  //   //Sends the list of users to the client
-  //   socketIO.emit("newUserResponse", users);
-  // });
+  //Kada igrač klikne na start igre, počinje igra
+  socket.on("startGame", (e) => {
+    console.log("Game", e);
+    socketIO.emit("BacTarget", getRandomArbitrary(2, 3));
+  });
+  //Kraj igre
+  socketIO.on("gameEnded", (e) => {
+    console.log("Pobjednik je", e.userName);
+    console.log("BAC", e.BAC);
+  });
+  //Kada igrač klikne na Šotiraj
+  socketIO.on("ShootEvent", (e) => {
+    socketIO.emit("newUserResponse", users);
+  });
 
   socket.on("disconnect", () => {
     console.log("🔥: A user disconnected");
-
-     //Updates the list of users when a user disconnects from the server
+    //Miče igrača iz liste igrača
     igraci = igraci.filter((igrac) => igrac.socketID !== socket.id);
-
-     //Sends the list of users to the client
+    //Salje igračima listu igrača nakon odspajanja
      socketIO.emit("ConnectedToGameResponse", igraci);
 
      socket.disconnect();
