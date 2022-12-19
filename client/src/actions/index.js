@@ -17,9 +17,11 @@ export const handleLoggin = () => {
   };
 };
 
-export const handleUserKilaza = (kilaza) => {
+export const handleUserInfo = (kilaza, r, userName) => {
   return {
     type: "KILAZA",
-    payload: kilaza,
+    kilaza: kilaza,
+    r: r,
+    userName: userName,
   };
 };

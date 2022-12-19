@@ -4,7 +4,7 @@ import { Button } from "@material-tailwind/react";
 import { FaWeightHanging } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { handleUserKilaza } from "../src/actions";
+import { handleUserInfo } from "../src/actions";
 
 const LoginPage = ({ socket }) => {
   const getUserInfo = useSelector((state) => state.getUserInfo);
@@ -35,10 +35,10 @@ const LoginPage = ({ socket }) => {
 
   const submitEvent = (event) => {
     event.preventDefault();
-
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
+      dispatch(handleUserInfo(kile, r, userName));
       localStorage.setItem("userName", userName);
       //Spajanje igrača na server
       socket.emit("connectedToGame", {
@@ -72,7 +72,7 @@ const LoginPage = ({ socket }) => {
           <Input
             label="Tresi masu"
             type="number"
-            onChange={(e) => dispatch(handleUserKilaza(e.target.value))}
+            onChange={kileEvent}
             icon={<FaWeightHanging />}
             className="appearance-none"
           />

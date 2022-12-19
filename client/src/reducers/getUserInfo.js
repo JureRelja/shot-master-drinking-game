@@ -1,7 +1,7 @@
 const getUserInfo = (state = "", action) => {
     switch (action.type) {
       case "KILAZA":
-        return [...state, action.payload];
+        return action.kilaza, action.r, action.userName;
       default:
         return state;
     }
