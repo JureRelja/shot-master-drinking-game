@@ -8,14 +8,6 @@ import { ThemeProvider } from "@material-tailwind/react";
 
 const store = configureStore();
 
-// Display it in the console
-
-store.subscribe(() => console.log(store.getState()));
-
-// // Dispatch
-// store.dispatch(increment());
-// store.dispatch(decrement());
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider>

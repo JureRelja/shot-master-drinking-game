@@ -5,6 +5,7 @@ import { increment, decrement, handleLoggin } from "../src/actions";
 const Test = () => {
   const counter = useSelector((state) => state.counter);
   const isLogged = useSelector((state) => state.isLogged);
+  const getUserInfo = useSelector((state) => state.getUserInfo);
   const dispatch = useDispatch();
   return (
     <div className="h-[100vh] w-[100wv] grid place-items-center">
@@ -29,6 +30,7 @@ const Test = () => {
           >
             Login
           </button>
+          <h1>{getUserInfo}</h1>
         </div>
         {isLogged ? <h1>Only show when loggin is true</h1> : ""}
       </div>

@@ -16,3 +16,10 @@ export const handleLoggin = () => {
     type: "SIGN_IN",
   };
 };
+
+export const handleUserKilaza = (kilaza) => {
+  return {
+    type: "KILAZA",
+    payload: kilaza,
+  };
+};

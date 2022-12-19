@@ -3,8 +3,13 @@ import { Input } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { FaWeightHanging } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { handleUserKilaza } from "../src/actions";
 
 const LoginPage = ({ socket }) => {
+  const getUserInfo = useSelector((state) => state.getUserInfo);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
@@ -67,10 +72,11 @@ const LoginPage = ({ socket }) => {
           <Input
             label="Tresi masu"
             type="number"
-            onChange={kileEvent}
+            onChange={(e) => dispatch(handleUserKilaza(e.target.value))}
             icon={<FaWeightHanging />}
             className="appearance-none"
           />
+          {getUserInfo}
           <Button type="submit" className="mt-3 ml-auto mr-auto">
             Submit
           </Button>
