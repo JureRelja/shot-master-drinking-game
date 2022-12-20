@@ -14,7 +14,7 @@ const GamePage = ({ socket }) => {
   const [ciljaniBAC, setCiljaniBAC] = useState(0);
   const [gameCreator, setGameCreator] = useState(true);
 
-  const [changeImage, setChangeImage] = useState(false);
+  const [showImage, setShowImage] = useState(false);
 
   const startAnimation = () => {
     setAnimationStarted(true);
@@ -62,6 +62,15 @@ const GamePage = ({ socket }) => {
     }
   }, [preostaloVrijeme, i]);
 
+  useEffect(() => {
+    if (showImage) {
+      const timeoutId = setTimeout(() => {
+        setShowImage(false);
+      }, 20);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [showImage]);
+
   return (
     <>
       <div className={`flex h-[100vh] w-[100vw] justify-center`}>
@@ -73,24 +82,17 @@ const GamePage = ({ socket }) => {
             id="character"
             className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
           >
-            {/* {changeImage ? (
-                () => {
-                  setChangeImage(false);
-                  return <img src={pije} alt="" className="absolute" />;
-                }
-              ) : (
-                <img src={odmara} alt="" />
-              )} */}
+            {showImage ? (
+              <img src={pije} alt="pije" />
+            ) : (
+              <img src={odmara} alt="odmara" />
+            )}
           </div>
-          {/* <Button onClick={setChangeImage(true)} className="mt-4 w-[200px]">
-            Test
-          </Button> */}
-          {/*   */}
           <Button
             className={`h-[40px] bg-red-900 ${showButton}`}
             onClick={() => {
               shootEvent;
-              startAnimation;
+              setShowImage(true);
             }}
           >
             Šotiraj
