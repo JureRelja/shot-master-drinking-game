@@ -1,4 +1,3 @@
-
 const INITIAL_STATE = {};
 
 const getUserInfo = (state = INITIAL_STATE, action) => {
