@@ -13,18 +13,22 @@ const LoginPage = ({ socket }) => {
   const [userName, setUserName] = useState("");
   //
   const [gameCreator, setGameCreator] = useState(true);
-  const { roomID } = state;
+  //const { roomID } = state;
+
+  const handleGender = (e) => {
+    if (e.target.value === "Muško") {
+      setR(0.68);
+    } else if (e.target.value === "Žensko") {
+      setR(0.55);
+    }
+  };
 
   const submitEvent = (event) => {
     event.preventDefault();
+
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      if (event.target.value == "Žensko") {
-        setR(0.55);
-      } else if (event.target.value == "Muško") {
-        setR(0.68);
-      }
       localStorage.setItem("userName", userName);
       //Spajanje igrača u sobu
       socket.emit("connectedToGame", {
@@ -48,7 +52,7 @@ const LoginPage = ({ socket }) => {
             className="appearance-none"
           />
           <select
-            onChange={genderEvent}
+            onChange={handleGender}
             className="mt-3 ml-auto mr-auto bg-gray-50 border mb-4 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option value="">Odaberi spol</option>

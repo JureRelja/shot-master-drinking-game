@@ -40,4 +40,4 @@ const Test = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(Test);
+export default Test;

@@ -4,7 +4,7 @@ import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
 import { useLocation } from "react-router-dom";
 
-const GamePage = () => {
+const GamePage = ({ socket }) => {
   const { state } = useLocation();
   const g_alch = 10.428;
   const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
@@ -70,7 +70,7 @@ const GamePage = () => {
     if (showImage) {
       const timeoutId = setTimeout(() => {
         setShowImage(false);
-      }, 20);
+      }, 300);
       return () => clearTimeout(timeoutId);
     }
   }, [showImage]);
