@@ -2,8 +2,15 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { increment, decrement, handleLoggin } from "../src/actions";
+import { connect } from "react-redux";
 
-const Test = () => {
+const mapStateToProps = (state) => {
+  return {
+    formData: state.getUserInfo,
+  };
+};
+
+const Test = (props) => {
   const counter = useSelector((state) => state.counter);
   const isLogged = useSelector((state) => state.isLogged);
   const getUserInfo = useSelector((state) => state.getUserInfo);
@@ -12,6 +19,7 @@ const Test = () => {
   const { userName, r, kile } = state;
 
   const dispatch = useDispatch();
+  console.log(props.formData);
   return (
     <div className="h-[100vh] w-[100wv] grid place-items-center">
       <div>
@@ -43,4 +51,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default connect(mapStateToProps)(Test);
