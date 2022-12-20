@@ -47,7 +47,8 @@ const LoginPage = ({ socket }) => {
         gameCreator,
         lobbyID: `${socket.id}${Math.random()}`,
       });
-      navigate("/game");
+      navigate("/test", { state: { userName: userName, r: r, kile: kile } });
+      // navigate("/game");
     }
   };
   return (
@@ -76,7 +77,7 @@ const LoginPage = ({ socket }) => {
             icon={<FaWeightHanging />}
             className="appearance-none"
           />
-          {getUserInfo}
+          {getUserInfo.r}
           <Button type="submit" className="mt-3 ml-auto mr-auto">
             Submit
           </Button>

@@ -1,13 +1,15 @@
+import { INCREMENT, DECREMENT, KILAZA } from "../action_types";
+
 export const increment = (num) => {
   return {
-    type: "INCREMENT",
+    type: INCREMENT,
     payload: num,
   };
 };
 
 export const decrement = () => {
   return {
-    type: "DECREMENT",
+    type: DECREMENT,
   };
 };
 
@@ -19,9 +21,11 @@ export const handleLoggin = () => {
 
 export const handleUserInfo = (kilaza, r, userName) => {
   return {
-    type: "KILAZA",
-    kilaza: kilaza,
-    r: r,
-    userName: userName,
+    type: KILAZA,
+    payload: {
+      userName: userName,
+      kilaza: kilaza,
+      r: r,
+    },
   };
 };

@@ -1,11 +1,16 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { increment, decrement, handleLoggin } from "../src/actions";
 
 const Test = () => {
   const counter = useSelector((state) => state.counter);
   const isLogged = useSelector((state) => state.isLogged);
   const getUserInfo = useSelector((state) => state.getUserInfo);
+
+  const { state } = useLocation();
+  const { userName, r, kile } = state;
+
   const dispatch = useDispatch();
   return (
     <div className="h-[100vh] w-[100wv] grid place-items-center">
@@ -30,7 +35,7 @@ const Test = () => {
           >
             Login
           </button>
-          <h1>{getUserInfo}</h1>
+          <h1>test: {userName}</h1>
         </div>
         {isLogged ? <h1>Only show when loggin is true</h1> : ""}
       </div>
