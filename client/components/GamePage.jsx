@@ -2,8 +2,10 @@ import { Button } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
+import { useLocation } from "react-router-dom";
 
-const GamePage = ({ socket }) => {
+const GamePage = () => {
+  const { state } = useLocation();
   const g_alch = 10.428;
   const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
@@ -15,6 +17,8 @@ const GamePage = ({ socket }) => {
   const [gameCreator, setGameCreator] = useState(true);
 
   const [changeImage, setChangeImage] = useState(false);
+
+  const { userName, r, kile } = state;
 
   const startAnimation = () => {
     setAnimationStarted(true);
@@ -52,7 +56,7 @@ const GamePage = ({ socket }) => {
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
         if (preostaloVrijeme <= 0.1) {
           socket.emit("gameEnded", {
-            userName: localStorage.getItem("userName"),
+            userName: userName,
             BAC: ukupniBAC,
           });
           alert("Kraj igre");

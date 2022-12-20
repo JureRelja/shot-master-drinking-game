@@ -2,53 +2,38 @@ import React, { useState } from "react";
 import { Input } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { FaWeightHanging } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { handleUserInfo } from "../src/actions";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const LoginPage = ({ socket }) => {
-  const getUserInfo = useSelector((state) => state.getUserInfo);
-  const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const { state } = useLocation();
+  //Podatci koje unosi korisnik
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
   const [userName, setUserName] = useState("");
-
+  //
   const [gameCreator, setGameCreator] = useState(true);
-
-  const kileEvent = (event) => {
-    setKile(event.target.value * 1000);
-  };
-
-  const userNameEvent = (event) => {
-    setUserName(event.target.value);
-  };
-
-  const genderEvent = (event) => {
-    if (event.target.value == "Žensko") {
-      setR(0.55);
-    } else if (event.target.value == "Muško") {
-      setR(0.68);
-    }
-  };
+  const { roomID } = state;
 
   const submitEvent = (event) => {
     event.preventDefault();
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      dispatch(handleUserInfo(kile, r, userName));
+      if (event.target.value == "Žensko") {
+        setR(0.55);
+      } else if (event.target.value == "Muško") {
+        setR(0.68);
+      }
       localStorage.setItem("userName", userName);
-      //Spajanje igrača na server
+      //Spajanje igrača u sobu
       socket.emit("connectedToGame", {
         userName,
         socketID: socket.id,
         gameCreator,
         lobbyID: `${socket.id}${Math.random()}`,
       });
-      navigate("/test", { state: { userName: userName, r: r, kile: kile } });
-      // navigate("/game");
+      navigate("/game", { state: { userName: userName, r: r, kile: kile } });
     }
   };
   return (
@@ -56,10 +41,10 @@ const LoginPage = ({ socket }) => {
       <div className="bg-black-300 w-[300px] flex flex-col justify-center">
         <form onSubmit={submitEvent} className="flex flex-col items-center">
           <Input
-            label="Ime"
+            label="Korisničko ime"
             type="text"
             value={userName}
-            onChange={userNameEvent}
+            onChange={(e) => setUserName(e.target.value)}
             className="appearance-none"
           />
           <select
@@ -71,15 +56,15 @@ const LoginPage = ({ socket }) => {
             <option value="Žensko">Žensko</option>
           </select>
           <Input
-            label="Tresi masu"
+            label="Unesi masu u kilogramima"
             type="number"
-            onChange={kileEvent}
+            onChange={(e) => setKile(e.target.value * 1000)}
             icon={<FaWeightHanging />}
             className="appearance-none"
           />
-          {getUserInfo.r}
+
           <Button type="submit" className="mt-3 ml-auto mr-auto">
-            Submit
+            Prijavi se
           </Button>
         </form>
       </div>
