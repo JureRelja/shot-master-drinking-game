@@ -19,10 +19,7 @@ export default function App() {
             path="/join"
             element={<JoinGamePage socket={socket} />}
           ></Route>
-          <Route
-            path="/login"
-            element={<LoginPage socket={socket} onEnter={requireAuth} />}
-          ></Route>
+          <Route path="/login" element={<LoginPage socket={socket} />}></Route>
           <Route path="/game" element={<GamePage socket={socket} />}></Route>
           <Route path="/test" element={<Test />}></Route>
         </Routes>

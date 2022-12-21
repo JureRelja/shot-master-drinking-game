@@ -17,7 +17,10 @@ const JoinGamePage = ({ socket }) => {
   };
 
   return (
-    <div id="container" className={`h-[100vh] w-[100vw] flex justify-center`}>
+    <div
+      id="container"
+      className={`h-[100vh] w-[100vw] flex justify-center bg-[url(../assets/Ikonice.svg)] bg-cover`}
+    >
       <div className="bg-black-300 w-[300px] flex flex-col justify-center">
         <form onSubmit={handleUserJoin} className="flex flex-col items-center">
           <Input

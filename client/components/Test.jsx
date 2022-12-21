@@ -1,11 +1,9 @@
 import React from "react";
 import { Button } from "@material-tailwind/react";
 import { useSelector, useDispatch } from "react-redux";
-import getUserInfo from "../src/reducers/getUserInfo";
 
 const Test = (props) => {
-  const customEqual = (oldValue, newValue) => oldValue === newValue;
-  const getUserInfo = useSelector((state) => state.getUserInfo, customEqual);
+  const getUserInfo = useSelector((state) => state.getUserInfo);
 
   const { userName, r, kilaza } = getUserInfo;
 

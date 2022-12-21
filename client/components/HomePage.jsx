@@ -12,20 +12,11 @@ const HomePage = ({ socket }) => {
 
   return (
     <>
-      {/* {startGame && (
-        <GameScreen
-          r={r}
-          kile={kile}
-          buttonAndBacStyle={buttonAndBacStyle}
-          socket={socket}
-          gameCreator={gameCreator}
-        />
-      )} */}
       <div
         className={`
         h-[100vh] w-[100vw] 
         flex justify-center items-center 
-        bg-[url(../assets/background.jpg)] bg-cover backdrop-blur-[10px]`}
+        bg-[url(../assets/club.jpg)] bg-cover backdrop-blur-[10px]`}
       >
         <div
           className="
@@ -34,18 +25,6 @@ const HomePage = ({ socket }) => {
         bg-black bg-opacity-40  backdrop-filter backdrop-blur-[10px] transition hover:backdrop-blur-[12px]
         shadow-[0_35px_60px_-15px_rgba(75,0,130)]"
         >
-<<<<<<< HEAD
-          Kreiraj Novu Igru
-        </Button>
-        <Button
-          className={`h-[40px]`}
-          onClick={() => {
-            navigate("/join");
-          }}
-        >
-          Pridruži se Postojećoj Igri
-        </Button>
-=======
           <img src={logo} alt="logo" className="" />
           <Button
             variant="outlined"
@@ -66,7 +45,6 @@ const HomePage = ({ socket }) => {
             Join Game
           </Button>
         </div>
->>>>>>> origin/ilija
       </div>
     </>
   );

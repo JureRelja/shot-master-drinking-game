@@ -13,6 +13,7 @@ const LoginPage = ({ socket }) => {
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
   const [userName, setUserName] = useState("");
+  let gameCreator = true;
 
   let roomID = state?.roomID || "";
 
@@ -58,9 +59,12 @@ const LoginPage = ({ socket }) => {
     });
   };
   return (
-    <div id="container" className={`h-[100vh] w-[100vw] flex justify-center`}>
-      <div className="bg-black-300 w-[300px] flex flex-col justify-center">
-        <form onSubmit={submitEvent} className="flex flex-col items-center">
+    <div
+      id="container"
+      className={`h-[100vh] w-[100vw] flex justify-center bg-[url(../assets/home_background.jpg)] bg-cover bg-orange-200`}
+    >
+      <div className="bg-black-300 w-[300px] flex flex-col justify-center shadow-[0_35px_60px_-15px_rgba(75,0,130)]">
+        <form onSubmit={submitEvent} className="flex flex-col items-center box">
           <Input
             label="Korisničko ime"
             type="text"
