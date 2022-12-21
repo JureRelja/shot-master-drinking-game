@@ -22,15 +22,19 @@ const HomePage = ({ socket }) => {
         />
       )} */}
       <div
-        className={`h-[100vh] w-[100vw] flex justify-center items-center flex-col`}
+        className={`
+        h-[100vh] w-[100vw] 
+        flex justify-center items-center 
+        bg-[url(../assets/background.jpg)] bg-cover backdrop-blur-[10px]`}
       >
-        <img src={logo} alt="logo" className="" />
-        <Button
-          className={`h-[40px]`}
-          onClick={() => {
-            navigate("/login");
-          }}
+        <div
+          className="
+        flex flex-col justify-center items-center 
+        rounded-lg p-12 
+        bg-black bg-opacity-40  backdrop-filter backdrop-blur-[10px] transition hover:backdrop-blur-[12px]
+        shadow-[0_35px_60px_-15px_rgba(75,0,130)]"
         >
+<<<<<<< HEAD
           Kreiraj Novu Igru
         </Button>
         <Button
@@ -41,6 +45,28 @@ const HomePage = ({ socket }) => {
         >
           Pridruži se Postojećoj Igri
         </Button>
+=======
+          <img src={logo} alt="logo" className="" />
+          <Button
+            variant="outlined"
+            className="mt-3 border-[#4b0082] border-2 text-white transition hover:bg-[#4b0082]"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Create Game
+          </Button>
+          <Button
+            className="mt-3"
+            onClick={() => {
+              setGameCreator(false);
+              navigate("/game");
+            }}
+          >
+            Join Game
+          </Button>
+        </div>
+>>>>>>> origin/ilija
       </div>
     </>
   );

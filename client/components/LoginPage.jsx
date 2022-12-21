@@ -3,6 +3,8 @@ import { Input } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { FaWeightHanging } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { handleUserInfo } from "../src/actions";
 
 const LoginPage = ({ socket }) => {
   const navigate = useNavigate();
@@ -12,9 +14,10 @@ const LoginPage = ({ socket }) => {
   const [r, setR] = useState(0);
   const [userName, setUserName] = useState("");
 
-  let gameCreator = true;
-
   let roomID = state?.roomID || "";
+
+  const getUserInfo = useSelector((state) => state.getUserInfo);
+  const dispatch = useDispatch();
 
   const handleGender = (e) => {
     if (e.target.value === "Muško") {
@@ -29,6 +32,7 @@ const LoginPage = ({ socket }) => {
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
+      dispatch(handleUserInfo(userName, r, kile));
       //Spajanje igrača u sobu
       if (roomID != "") {
         gameCreator = false;

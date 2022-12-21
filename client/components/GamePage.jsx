@@ -26,11 +26,6 @@ const GamePage = ({ socket }) => {
   const userName = state?.userName || "";
   const [igraci, setIgraci] = useState([]);
 
-  if (userName == "") {
-    console.log("kdjfa");
-    navigate("/login");
-  }
-
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
     socket.emit("ShootEvent", "ShootEvent");

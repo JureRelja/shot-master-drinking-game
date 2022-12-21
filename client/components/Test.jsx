@@ -1,40 +1,46 @@
 import React from "react";
+import { Button } from "@material-tailwind/react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { increment, decrement, handleLoggin } from "../src/actions";
+import getUserInfo from "../src/reducers/getUserInfo";
 
 const Test = (props) => {
-  const counter = useSelector((state) => state.counter);
-  const isLogged = useSelector((state) => state.isLogged);
+  const customEqual = (oldValue, newValue) => oldValue === newValue;
+  const getUserInfo = useSelector((state) => state.getUserInfo, customEqual);
 
-  const dispatch = useDispatch();
-  console.log(props.formData);
+  const { userName, r, kilaza } = getUserInfo;
+
   return (
-    <div className="h-[100vh] w-[100wv] grid place-items-center">
-      <div>
-        <h1>Counter {counter}</h1>
-        <button
-          onClick={() => dispatch(increment(5))}
-          className="w-[100px] h-[30px] bg-blue-gray-500"
-        >
-          +
-        </button>
-        <button
-          onClick={() => dispatch(decrement())}
-          className="w-[100px] h-[30px] bg-blue-gray-500 ml-5"
-        >
-          -
-        </button>
-        <div>
-          <button
-            onClick={() => dispatch(handleLoggin())}
-            className="w-[100px] h-[30px] bg-blue-gray-500 mt-5"
-          >
-            Login
-          </button>
-          <h1>test: {userName}</h1>
-        </div>
-        {isLogged ? <h1>Only show when loggin is true</h1> : ""}
+    <div className="h-[94vh] w-[90vw] border-2 border-red-900 m-auto mt-[3vh] grid grid-cols-6 grid-rows-5 gap-4 overscroll-contain text-white">
+      <div
+        className="
+          col-start-1 col-span-3 
+          row-start-2 row-span-3 
+          bg-[#FF7C23] 
+          grid place-items-center
+          shadow-2xl rounded-xl"
+      >
+        Player1 UserInfo: {userName} {r} {kilaza}
+      </div>
+      <div
+        className="
+      h-[80%] w-[80%] 
+      col-start-3 col-span-2 row-start-1 row-span-2 
+      bg-[#DF5A00] z-10 shadow-2xl rounded-xl 
+      grid place-items-center m-auto"
+      >
+        Timer
+      </div>
+      <div
+        className="
+          col-start-4 col-span-3 row-start-2 row-span-3 
+          bg-[#FF7C23] z-1
+          grid place-items-center
+          shadow-2xl rounded-xl"
+      >
+        Player2
+      </div>
+      <div className="col-start-3 col-span-2 row-start-4 grid place-items-center">
+        <Button>Start Game</Button>
       </div>
     </div>
   );
