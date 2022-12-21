@@ -11,9 +11,10 @@ const LoginPage = ({ socket }) => {
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
   const [userName, setUserName] = useState("");
-  //
-  const [gameCreator, setGameCreator] = useState(true);
-  //const { roomID } = state;
+
+  let gameCreator = true;
+
+  let roomID = state?.roomID || "";
 
   const handleGender = (e) => {
     if (e.target.value === "Muško") {
@@ -25,20 +26,32 @@ const LoginPage = ({ socket }) => {
 
   const submitEvent = (event) => {
     event.preventDefault();
-
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      localStorage.setItem("userName", userName);
       //Spajanje igrača u sobu
-      socket.emit("connectedToGame", {
+      if (roomID != "") {
+        gameCreator = false;
+        console.log(gameCreator);
+      } else {
+        roomID = `${socket.id}${Math.random()}`;
+      }
+      localStorage.setItem("userName", userName);
+      socket.emit("ConnectingToRoom", {
         userName,
         socketID: socket.id,
         gameCreator,
-        lobbyID: `${socket.id}${Math.random()}`,
+        roomID,
       });
-      navigate("/game", { state: { userName: userName, r: r, kile: kile } });
     }
+    navigate(`/game?id=${roomID}`, {
+      state: {
+        userName: userName,
+        r: r,
+        kile: kile,
+        gameCreator: gameCreator,
+      },
+    });
   };
   return (
     <div id="container" className={`h-[100vh] w-[100vw] flex justify-center`}>

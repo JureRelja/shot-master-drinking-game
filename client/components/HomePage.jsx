@@ -31,16 +31,15 @@ const HomePage = ({ socket }) => {
             navigate("/login");
           }}
         >
-          Create Game
+          Kreiraj Novu Igru
         </Button>
         <Button
           className={`h-[40px]`}
           onClick={() => {
-            setGameCreator(false);
-            navigate("/game");
+            navigate("/join");
           }}
         >
-          Join Game
+          Pridruži se Postojećoj Igri
         </Button>
       </div>
     </>

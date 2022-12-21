@@ -3,44 +3,53 @@ import React, { useEffect, useState } from "react";
 import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const GamePage = ({ socket }) => {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const g_alch = 10.428;
-  const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
+
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
-  const [poruka, setPoruka] = useState("");
   const [showButton, setShowButton] = useState("hidden");
+  const [showImage, setShowImage] = useState(false);
+  //Preostalo vrijeme igre
   const [preostaloVrijeme, setPreostaloVrijeme] = useState(60);
   const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60);
+  //BAC level u krvi
   const [ciljaniBAC, setCiljaniBAC] = useState(0);
-  const [gameCreator, setGameCreator] = useState(true);
+  const [ukupniBAC, setUkupniBAC] = useState(0);
 
-  const [showImage, setShowImage] = useState(false);
+  const r = state?.r || "0";
+  const kile = state?.kile || "";
+  const gameCreator = state?.gameCreator || false;
+  const userName = state?.userName || "";
+  const [igraci, setIgraci] = useState([]);
 
-  const { userName, r, kile } = state;
-
-  const startAnimation = () => {
-    setAnimationStarted(true);
-  };
+  if (userName == "") {
+    console.log("kdjfa");
+    navigate("/login");
+  }
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
     socket.emit("ShootEvent", "ShootEvent");
   };
 
-  if (ukupniBAC < 2 && ukupniBAC > 1) {
-    setPoruka("Pomalo rodijače");
-  } else if (ukupniBAC > 4.6) {
-    setPoruka("Rodijače oš ti zaronit");
-  }
-
-  const startTimerEvent = () => {
+  const startGameEvent = () => {
     socket.emit("startGame", "start");
     setI(i + 1);
   };
 
   useEffect(() => {
+    socket.on("ConnectedToRoomResponse", (e) => {
+      console.log("ConnectedToRoomResponse: ", e);
+      setIgraci(...igraci, e);
+    });
+  }, [igraci, socket]);
+
+  useEffect(() => {
+    console.log("Igraci: ", igraci);
     socket.on("BacTarget", (e) => {
       console.log("Ciljani level alkhola u krvi: ", e);
       setCiljaniBAC(Math.round(e * 100) / 100);
@@ -101,7 +110,6 @@ const GamePage = ({ socket }) => {
           >
             Šotiraj
           </Button>
-          <span>{poruka}</span>
         </div>
         <div className="flex flex-col justify-evenly">
           <div id="timer">
@@ -113,11 +121,11 @@ const GamePage = ({ socket }) => {
               color="green"
               onClick={() => {
                 setShowButton("block");
-                startTimerEvent();
+                startGameEvent();
               }}
               className=""
             >
-              Start Game
+              Pokreni Igru
             </Button>
           ) : null}
         </div>
