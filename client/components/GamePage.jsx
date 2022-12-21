@@ -103,6 +103,7 @@ const GamePage = ({ socket }) => {
           </Button>
           <span>{poruka}</span>
         </div>
+
         <div className="flex flex-col justify-evenly">
           <div id="timer">
             <span className="">Timer: {vrijemeUSekundama}</span>
@@ -121,13 +122,22 @@ const GamePage = ({ socket }) => {
             </Button>
           ) : null}
         </div>
+
         <div
           id="second_player"
           className="flex flex-col justify-center w-[30%]"
         >
           <span>Preostalo vrijeme: {vrijemeUSekundama}</span>
-          <img src={odmara} alt="odmara" className="w-[250px]" />
-          <img src={pije} alt="pije" className="w-[250px]" />
+          <div
+            id="character"
+            className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
+          >
+            {showImage ? (
+              <img src={pije} alt="pije" />
+            ) : (
+              <img src={odmara} alt="odmara" />
+            )}
+          </div>
           <span>Oponent Took a Shoot</span>
         </div>
       </div>

@@ -19,7 +19,7 @@ export const handleLoggin = () => {
   };
 };
 
-export const handleUserInfo = (kilaza, r, userName) => {
+export const handleUserInfo = (userName, r, kilaza) => {
   return {
     type: KILAZA,
     payload: {
