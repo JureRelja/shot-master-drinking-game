@@ -2,7 +2,7 @@ import { Button } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 const GamePage = ({ socket }) => {
   const { state } = useLocation();
