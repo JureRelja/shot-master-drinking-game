@@ -22,26 +22,28 @@ const HomePage = ({ socket }) => {
         />
       )} */}
       <div
-        className={`h-[100vh] w-[100vw] flex justify-center items-center flex-col`}
+        className={`h-[100vh] w-[100vw] flex justify-center items-center bg-[url(../assets/background.jpg)] bg-cover`}
       >
-        <img src={logo} alt="logo" className="" />
-        <Button
-          className={`h-[40px]`}
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          Create Game
-        </Button>
-        <Button
-          className={`h-[40px]`}
-          onClick={() => {
-            setGameCreator(false);
-            navigate("/game");
-          }}
-        >
-          Join Game
-        </Button>
+        <div className="flex flex-col justify-center items-center rounded-lg p-12 bg-black bg-opacity-40  backdrop-filter backdrop-blur-[10px] transition hover:backdrop-blur-[12px]">
+          <img src={logo} alt="logo" className="" />
+          <Button
+            className="mt-3"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Create Game
+          </Button>
+          <Button
+            className="mt-3"
+            onClick={() => {
+              setGameCreator(false);
+              navigate("/game");
+            }}
+          >
+            Join Game
+          </Button>
+        </div>
       </div>
     </>
   );
