@@ -44,7 +44,8 @@ const GamePage = ({ socket }) => {
   }, [igraci, socket]);
 
   useEffect(() => {
-    console.log("Igraci: ", igraci);
+    //console.log("Igraci: ", igraci);
+
     socket.on("BacTarget", (e) => {
       console.log("Ciljani level alkhola u krvi: ", e);
       setCiljaniBAC(Math.round(e * 100) / 100);
@@ -58,6 +59,7 @@ const GamePage = ({ socket }) => {
         }
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
+        console.log(ukupniBAC);
         if (preostaloVrijeme <= 0.1) {
           socket.emit("gameEnded", {
             userName: userName,
@@ -66,6 +68,7 @@ const GamePage = ({ socket }) => {
           alert("Kraj igre");
         }
       }, 100);
+
       return () => clearInterval(setTimer);
     }
   }, [preostaloVrijeme, i]);
@@ -99,7 +102,7 @@ const GamePage = ({ socket }) => {
           <Button
             className={`h-[40px] bg-red-900 ${showButton}`}
             onClick={() => {
-              shootEvent;
+              shootEvent();
               setShowImage(true);
             }}
           >
