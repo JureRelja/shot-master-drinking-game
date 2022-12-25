@@ -15,23 +15,29 @@ const HomePage = ({ socket }) => {
       <div
         className={`
         h-[100vh] w-[100vw] grid place-items-center
-        bg-[url(../assets/club_background.png)] bg-center bg-cover backdrop-blur-[10px]`}
+        bg-[url('../assets/bg1.jpg')] bg-center bg-cover backdrop-blur-[10px]`}
       >
+        {/* <img
+          src="../assets/test1.jpg"
+          alt=""
+          className="mix-blend-overlay absolute"
+        /> */}
         <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-[10vw] h-[50vh] w-[50vw] ">
           {/* <div></div> */}
           <div
             className="
-            flex flex-col items-center justify-center rounded-lg 
-            bg-[#2f2c7a] bg-opacity-40 backdrop-filter backdrop-blur-lg 
+            flex flex-col items-center justify-center rounded-lg backdrop-filter backdrop-blur-lg 
             transition-all duration-[900ms] ease-in-out 
-            hover:backdrop-blur-[12px] hover:bg-opacity-20 hover:bg-[#d61448]
+            bg-[#2A1711] bg-opacity-60 border-white border-[2px] border-opacity-20
+            hover:backdrop-blur-[20px] hover:bg-opacity-70
             shadow-[0_35px_60px_-15px_rgba(0,0,0,0.8)]
         "
           >
             <img src={logo} alt="logo" className="w-[50%]" />
             <Button
               variant="outlined"
-              className="border-[#ffc107] mt-3 border-2 transition-all duration-[400ms]  hover:opacity-100 hover:bg-[#ffc107] bg-opacity-90
+              className="border-[#F99B03] mt-3 border-2 transition-all duration-[400ms] 
+              hover:opacity-100 hover:bg-[#F99B03] bg-opacity-90
               text-white"
               onClick={() => {
                 navigate("/login");
@@ -40,8 +46,7 @@ const HomePage = ({ socket }) => {
               Create Game
             </Button>
             <Button
-              color="amber"
-              className="mt-3  text-white transition-all duration-[400ms]"
+              className="mt-3 bg-[#F99B03] shadow-none hover:shadow-none text-white transition-all duration-[400ms]"
               onClick={() => {
                 setGameCreator(false);
                 navigate("/game");
