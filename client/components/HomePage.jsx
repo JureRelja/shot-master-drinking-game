@@ -22,15 +22,30 @@ const HomePage = ({ socket }) => {
       <div
         className={`
         h-[100vh] w-[100vw] grid place-items-center
-        bg-[url('../assets/bg1.jpg')] bg-center bg-cover backdrop-blur-[10px]`}
+        bg-[url('../assets/bg-image.png')] bg-center bg-cover`}
       >
-        {/* <img
-          src="../assets/test1.jpg"
-          alt=""
-          className="mix-blend-overlay absolute"
-        /> */}
-        <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-[10vw] h-[50vh] w-[50vw] ">
-          {/* <div></div> */}
+        <div className="fixed flex flex-col w-[30px] bg-[#] top-0 left-0">
+          Test
+        </div>
+        <div className="flex flex-col items-center">
+          <img src="../assets/players.png" alt="" className="h-[90%] w-[90%]" />
+          <div
+            className="
+            mt-3 h-[200px] w-[400px] flex flex-col justify-center items-center
+            transition-all duration-[900ms] ease-in-out 
+            bg-[#ffffff] bg-opacity-[0.15]
+          "
+          >
+            <button className="bg-white py-2 px-5 place-content-center border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] hover:bg-[#e1b04b]">
+              Kreiraj igru
+            </button>
+            <button className="mt-3 bg-white py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] hover:bg-[#e1b04b]">
+              Pridruzi se postojecoj igri
+            </button>
+          </div>
+        </div>
+        {/* <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-[10vw] h-[50vh] w-[50vw] ">
+          <div></div>
           <div
             className="
             flex flex-col items-center justify-center rounded-lg backdrop-filter backdrop-blur-lg 
@@ -63,7 +78,7 @@ const HomePage = ({ socket }) => {
               Join Game
             </Button>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
