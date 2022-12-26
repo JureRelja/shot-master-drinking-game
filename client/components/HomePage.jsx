@@ -12,15 +12,6 @@ const HomePage = ({ socket }) => {
 
   return (
     <>
-      {/* {startGame && (
-        <GameScreen
-          r={r}
-          kile={kile}
-          buttonAndBacStyle={buttonAndBacStyle}
-          socket={socket}
-          gameCreator={gameCreator}
-        />
-      )} */}
       <div
         className={`
         h-[100vh] w-[100vw] grid place-items-center

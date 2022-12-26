@@ -2,45 +2,50 @@ import { Button } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
-import { Navigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const GamePage = ({ socket }) => {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const g_alch = 10.428;
-  const [ukupniBAC, setUkupniBAC] = useState(0); //Level alkohola u krvi igrača
+
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
-  const [poruka, setPoruka] = useState("");
   const [showButton, setShowButton] = useState("hidden");
+  const [showImage, setShowImage] = useState(false);
+  //Preostalo vrijeme igre
   const [preostaloVrijeme, setPreostaloVrijeme] = useState(60);
   const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60);
+  //BAC level u krvi
   const [ciljaniBAC, setCiljaniBAC] = useState(0);
-  const [gameCreator, setGameCreator] = useState(true);
+  const [ukupniBAC, setUkupniBAC] = useState(0);
 
-  const [showImage, setShowImage] = useState(false);
-
-  const { userName, r, kile } = state;
-
-  const startAnimation = () => {
-    setAnimationStarted(true);
-  };
+  const r = state?.r || "0";
+  const kile = state?.kile || "";
+  const gameCreator = state?.gameCreator || false;
+  const userName = state?.userName || "";
+  const [igraci, setIgraci] = useState([]);
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
     socket.emit("ShootEvent", "ShootEvent");
   };
 
-  if (ukupniBAC < 2 && ukupniBAC > 1) {
-    setPoruka("Pomalo rodijače");
-  } else if (ukupniBAC > 4.6) {
-    setPoruka("Rodijače oš ti zaronit");
-  }
-
-  const startTimerEvent = () => {
+  const startGameEvent = () => {
     socket.emit("startGame", "start");
     setI(i + 1);
   };
 
   useEffect(() => {
+    socket.on("ConnectedToRoomResponse", (e) => {
+      console.log("ConnectedToRoomResponse: ", e);
+      setIgraci(...igraci, e);
+    });
+  }, [igraci, socket]);
+
+  useEffect(() => {
+    //console.log("Igraci: ", igraci);
+
     socket.on("BacTarget", (e) => {
       console.log("Ciljani level alkhola u krvi: ", e);
       setCiljaniBAC(Math.round(e * 100) / 100);
@@ -54,6 +59,7 @@ const GamePage = ({ socket }) => {
         }
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
+        console.log(ukupniBAC);
         if (preostaloVrijeme <= 0.1) {
           socket.emit("gameEnded", {
             userName: userName,
@@ -62,6 +68,7 @@ const GamePage = ({ socket }) => {
           alert("Kraj igre");
         }
       }, 100);
+
       return () => clearInterval(setTimer);
     }
   }, [preostaloVrijeme, i]);
@@ -95,15 +102,13 @@ const GamePage = ({ socket }) => {
           <Button
             className={`h-[40px] bg-red-900 ${showButton}`}
             onClick={() => {
-              shootEvent;
+              shootEvent();
               setShowImage(true);
             }}
           >
             Šotiraj
           </Button>
-          <span>{poruka}</span>
         </div>
-
         <div className="flex flex-col justify-evenly">
           <div id="timer">
             <span className="">Timer: {vrijemeUSekundama}</span>
@@ -114,30 +119,21 @@ const GamePage = ({ socket }) => {
               color="green"
               onClick={() => {
                 setShowButton("block");
-                startTimerEvent();
+                startGameEvent();
               }}
               className=""
             >
-              Start Game
+              Pokreni Igru
             </Button>
           ) : null}
         </div>
-
         <div
           id="second_player"
           className="flex flex-col justify-center w-[30%]"
         >
           <span>Preostalo vrijeme: {vrijemeUSekundama}</span>
-          <div
-            id="character"
-            className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
-          >
-            {showImage ? (
-              <img src={pije} alt="pije" />
-            ) : (
-              <img src={odmara} alt="odmara" />
-            )}
-          </div>
+          <img src={odmara} alt="odmara" className="w-[250px]" />
+          <img src={pije} alt="pije" className="w-[250px]" />
           <span>Oponent Took a Shoot</span>
         </div>
       </div>
