@@ -6,8 +6,6 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const GamePage = ({ socket }) => {
-  const { state } = useLocation();
-  const navigate = useNavigate();
   const g_alch = 10.428;
 
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
@@ -19,12 +17,10 @@ const GamePage = ({ socket }) => {
   //BAC level u krvi
   const [ciljaniBAC, setCiljaniBAC] = useState(0);
   const [ukupniBAC, setUkupniBAC] = useState(0);
-
-  const r = state?.r || "0";
-  const kile = state?.kile || "";
-  const gameCreator = state?.gameCreator || false;
-  const userName = state?.userName || "";
   const [igraci, setIgraci] = useState([]);
+
+  const getUserInfo = useSelector((state) => state.getUserInfo);
+  const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
@@ -44,8 +40,6 @@ const GamePage = ({ socket }) => {
   }, [igraci, socket]);
 
   useEffect(() => {
-    //console.log("Igraci: ", igraci);
-
     socket.on("BacTarget", (e) => {
       console.log("Ciljani level alkhola u krvi: ", e);
       setCiljaniBAC(Math.round(e * 100) / 100);
@@ -131,7 +125,6 @@ const GamePage = ({ socket }) => {
           id="second_player"
           className="flex flex-col justify-center w-[30%]"
         >
-          <span>Preostalo vrijeme: {vrijemeUSekundama}</span>
           <img src={odmara} alt="odmara" className="w-[250px]" />
           <img src={pije} alt="pije" className="w-[250px]" />
           <span>Oponent Took a Shoot</span>

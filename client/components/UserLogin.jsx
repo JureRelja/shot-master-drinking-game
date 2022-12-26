@@ -6,16 +6,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { handleUserInfo } from "../src/actions";
 
-const LoginPage = ({ socket }) => {
-  const navigate = useNavigate();
-  const { state } = useLocation();
+const LoginPage = ({ socket, gameCreator }) => {
   //Podatci koje unosi korisnik
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
   const [userName, setUserName] = useState("");
-  let gameCreator = true;
-
-  let roomID = state?.roomID || "";
+  const [roomID, setRoomID] = useState("");
 
   const getUserInfo = useSelector((state) => state.getUserInfo);
   const dispatch = useDispatch();
@@ -33,30 +29,25 @@ const LoginPage = ({ socket }) => {
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      dispatch(handleUserInfo(userName, r, kile));
-      //Spajanje igrača u sobu
-      if (roomID != "") {
-        gameCreator = false;
-        console.log(gameCreator);
-      } else {
-        roomID = `${socket.id}${Math.random()}`;
+      if (gameCreator) {
+        setRoomID(`${socket.id}${Math.random()}`);
       }
-      localStorage.setItem("userName", userName);
+      if (roomID == "") {
+        alert("Niste unijeli ID igre");
+      }
+      //Spremanje podataka u redux store
+      dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
+      //Slanje podataka serveru
       socket.emit("ConnectingToRoom", {
         userName,
         socketID: socket.id,
-        gameCreator,
         roomID,
+        gameCreator,
+        r,
+        kile,
       });
     }
-    navigate(`/game?id=${roomID}`, {
-      state: {
-        userName: userName,
-        r: r,
-        kile: kile,
-        gameCreator: gameCreator,
-      },
-    });
+    navigate(`/game?id=${roomID}`);
   };
   return (
     <div
@@ -88,6 +79,15 @@ const LoginPage = ({ socket }) => {
             className="appearance-none"
           />
 
+          {!gameCreator ? (
+            <Input
+              label="roomID"
+              type="text"
+              onChange={(e) => setRoomID(e.target.value)}
+              className="appearance-none"
+            />
+          ) : null}
+
           <Button type="submit" className="mt-3 ml-auto mr-auto">
             Prijavi se
           </Button>
@@ -97,4 +97,4 @@ const LoginPage = ({ socket }) => {
   );
 };
 
-export default LoginPage;
+export default UserLogin;

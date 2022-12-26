@@ -15,11 +15,6 @@ export default function App() {
       <div>
         <Routes>
           <Route path="/" element={<HomePage socket={socket} />}></Route>
-          <Route
-            path="/join"
-            element={<JoinGamePage socket={socket} />}
-          ></Route>
-          <Route path="/login" element={<LoginPage socket={socket} />}></Route>
           <Route path="/game" element={<GamePage socket={socket} />}></Route>
           <Route path="/test" element={<Test />}></Route>
         </Routes>

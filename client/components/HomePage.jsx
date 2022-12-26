@@ -6,9 +6,16 @@ import { Input } from "@material-tailwind/react";
 import "./main.css";
 import { FaWeightHanging } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import UserLogin from "./UserLogin";
 
 const HomePage = ({ socket }) => {
   const navigate = useNavigate();
+  const [gameCreator, setGameCreator] = useState(false);
+  const [roomID, setRoomID] = useState("");
+
+  const handleCreateGame = () => {
+    setGameCreator(true);
+  };
 
   return (
     <>
@@ -41,6 +48,7 @@ const HomePage = ({ socket }) => {
               text-white"
               onClick={() => {
                 navigate("/login");
+                handleCreateGame();
               }}
             >
               Create Game

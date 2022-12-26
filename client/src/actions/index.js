@@ -26,6 +26,8 @@ export const handleUserInfo = (userName, r, kilaza) => {
       userName: userName,
       kilaza: kilaza,
       r: r,
+      roomID: roomID,
+      gameCreator: gameCreator,
     },
   };
 };
