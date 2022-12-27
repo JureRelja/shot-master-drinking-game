@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { Input } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { FaWeightHanging } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { handleUserInfo } from "../src/actions";
+import { handleLoggin, handleUserInfo } from "../src/actions";
 
 const LoginPage = ({ socket, gameCreator }) => {
   //Podatci koje unosi korisnik
@@ -50,12 +49,12 @@ const LoginPage = ({ socket, gameCreator }) => {
     navigate(`/game?id=${roomID}`);
   };
   return (
-    <div
-      id="container"
-      className={`h-[100vh] w-[100vw] flex justify-center bg-[url(../assets/home_background.jpg)] bg-cover bg-orange-200`}
-    >
-      <div className="bg-black-300 w-[300px] flex flex-col justify-center shadow-[0_35px_60px_-15px_rgba(75,0,130)]">
-        <form onSubmit={submitEvent} className="flex flex-col items-center box">
+    <div className="bg-black bg-opacity-[0.5] w-[100%] h-[100%] flex flex-col items-center justify-center absolute">
+      <div className="bg-[#FECB63] w-[270px] flex flex-col justify-center shadow-[0_35px_60px_-15px_rgba(75,0,130)] ">
+        <form
+          onSubmit={submitEvent}
+          className="flex flex-col items-center box p-5"
+        >
           <Input
             label="Korisničko ime"
             type="text"
@@ -84,17 +83,21 @@ const LoginPage = ({ socket, gameCreator }) => {
               label="roomID"
               type="text"
               onChange={(e) => setRoomID(e.target.value)}
-              className="appearance-none"
+              className="appearance-none mt-3"
             />
           ) : null}
 
-          <Button type="submit" className="mt-3 ml-auto mr-auto">
-            Prijavi se
-          </Button>
+          <button
+            onClick={submitEvent}
+            type="submit"
+            className="bg-[#F99B03] py-2 px-5 place-content-center border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] hover:bg-[#F99B03] text-white mt-6"
+          >
+            Kreiraj igru
+          </button>
         </form>
       </div>
     </div>
   );
 };
 
-export default UserLogin;
+export default LoginPage;
