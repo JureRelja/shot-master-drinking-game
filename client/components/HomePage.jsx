@@ -1,90 +1,107 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import { Button } from "@material-tailwind/react";
+import { Fragment, useEffect, useState } from "react";
+import {
+  Tooltip,
+  Button,
+  Dialog,
+  DialogBody,
+  DialogHeader,
+  DialogFooter,
+} from "@material-tailwind/react";
 import logo from "../assets/logo.gif";
 import "./main.css";
 import { FaWeightHanging } from "react-icons/fa";
-import LoginPage from "./LoginPage";
+import { useNavigate } from "react-router-dom";
+import { LoginPage, JoinGamePage } from "./";
 
 const HomePage = ({ socket }) => {
-  const [gameCreator, setGameCreator] = useState(false);
-  const [triggerLoginForm, setTriggerLoginForm] = useState(false);
-
-  const handleCreateGame = () => {
-    setGameCreator(true);
-    setTriggerLoginForm(true);
-  };
+  const navigate = useNavigate();
+  const [darken_bg, setDarken_bg] = useState("hidden");
+  const [showForm, setShowForm] = useState(false);
+  const [showJoin, setShowJoin] = useState(false);
+  const [showButtons, setShowButtons] = useState("");
 
   return (
     <>
       <div
+        id="main"
         className={`
-        h-screen grid place-items-center
+        h-screen w-screen grid place-items-center
         bg-[url('../assets/bg-image.png')] bg-center bg-cover`}
       >
-        <div className="flex flex-col items-center h-[80%] w-[80%]">
-          <img src="../assets/players.png" alt="" className="w-[500px]" />
+        <div
+          className={`absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-40 backdrop-filter backdrop-blur-sm ${darken_bg}`}
+        ></div>
+        <div className="fixed grid grid-cols-1 grid-rows-5 gap-2 w-[30px] bg-[#F69156] h-screen top-0 left-0">
+          <div className="bg-[#FD7221]">
+            <Tooltip
+              placement="right"
+              className="w-[70vw] max-w-[400px] bg-white text-black p-5 ml-2"
+              content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium magnam amet voluptatibus quisquam repudiandae, corrupti quas ipsa! Labore laboriosam quidem quae minus enim aliquid vel earum aperiam obcaecati corporis! Eveniet."
+            >
+              <Button
+                id="orientation"
+                className="m-0 p-0
+                    h-full w-full rotate-180
+                    text-white normal-case font-medium
+                    rounded-none
+                    bg-opacity-0 shadow-none sm:shadow-none hover:shadow-none
+                    transition-all hover:bg-[#ee6a1e] hover:animate-[wiggle_1s_ease-in-out_infinite]
+                "
+              >
+                Kako igrati
+              </Button>
+            </Tooltip>
+          </div>
+          <div></div>
+        </div>
+        <div className="flex flex-col items-center">
+          <img src="../assets/players.png" alt="" className="h-[90%] w-[90%]" />
           <div
-            className="
-            mt-3 h-[300px] w-[400px] flex flex-col justify-center items-center
+            className={`
+            -mt-12 h-[170px] w-[25vw] flex flex-col justify-center items-center
             transition-all duration-[900ms] ease-in-out 
-            bg-[#FECB63]
-          "
+            bg-[#FECB63] 
+            shadow-[0px_5px_10px_0px_rgba(0,0,0)]
+            
+          `}
           >
             <button
-              onClick={handleCreateGame}
-              className="bg-[#F99B03] py-2 px-5 place-content-center border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] hover:bg-[#F99B03] text-white"
+              className={`py-2 px-5 border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#FD7221] text-white`}
+              onClick={() => {
+                setDarken_bg("");
+                setShowButtons("hidden");
+                setShowForm(true);
+              }}
             >
               Kreiraj igru
             </button>
             <button
+              className={`mt-3 bg-white py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] hover:bg-[#fd853f] hover:text-white`}
               onClick={() => {
-                setTriggerLoginForm(true);
+                setDarken_bg("");
+                setShowButtons("hidden");
+                setShowJoin(true);
               }}
-              className="mt-3 bg-white py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] hover:bg-[#F99B03] hover:text-white"
             >
               Pridruzi se postojecoj igri
             </button>
           </div>
+          {showJoin && (
+            <JoinGamePage
+              setDarken_bg={setDarken_bg}
+              setShowButtons={setShowButtons}
+              setShowJoin={setShowJoin}
+            />
+          )}
+          {showForm && (
+            <LoginPage
+              setDarken_bg={setDarken_bg}
+              setShowButtons={setShowButtons}
+              setShowForm={setShowForm}
+            />
+          )}
         </div>
-        {/* <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-[10vw] h-[50vh] w-[50vw] ">
-          <div></div>
-          <div
-            className="
-            flex flex-col items-center justify-center rounded-lg backdrop-filter backdrop-blur-lg 
-            transition-all duration-[900ms] ease-in-out 
-            bg-[#2A1711] bg-opacity-60 border-white border-[2px] border-opacity-20
-            hover:backdrop-blur-[20px] hover:bg-opacity-70
-            shadow-[0_35px_60px_-15px_rgba(0,0,0,0.8)]
-        "
-          >
-            <img src={logo} alt="logo" className="w-[50%]" />
-            <Button
-              variant="outlined"
-              className="border-[#F99B03] mt-3 border-2 transition-all duration-[400ms] 
-              hover:opacity-100 hover:bg-[#F99B03] bg-opacity-90
-              text-white"
-              onClick={() => {
-                navigate("/login");
-                handleCreateGame();
-              }}
-            >
-              Create Game
-            </Button>
-            <Button
-              className="mt-3 bg-[#F99B03] shadow-none hover:shadow-none text-white transition-all duration-[400ms]"
-              onClick={() => {
-                setGameCreator(false);
-                navigate("/game");
-              }}
-            >
-              Join Game
-            </Button>
-          </div>
-        </div> */}
-        {triggerLoginForm ? (
-          <LoginPage gameCreator={gameCreator} socket={socket} />
-        ) : null}
       </div>
     </>
   );
