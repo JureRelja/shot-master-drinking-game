@@ -19,10 +19,6 @@ input[type="number"] {
   border: 2px solid;
 }
 
-#pije {
-  animation: showAndHide 1s;
-}
-
 @keyframes showAndHide {
   0% {
     opacity: 0;
@@ -33,4 +29,8 @@ input[type="number"] {
   100% {
     opacity: 0;
   }
+}
+
+#orientation {
+  writing-mode: vertical-rl;
 }

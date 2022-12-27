@@ -59,41 +59,56 @@ const LoginPage = ({ socket }) => {
     });
   };
   return (
-    <div
-      id="container"
-      className={`h-[100vh] w-[100vw] flex justify-center bg-[url(../assets/home_background.jpg)] bg-cover bg-orange-200`}
-    >
-      <div className="bg-black-300 w-[300px] flex flex-col justify-center shadow-[0_35px_60px_-15px_rgba(75,0,130)]">
-        <form onSubmit={submitEvent} className="flex flex-col items-center box">
-          <Input
+    <>
+      <div
+        className={`min-h-min min-w-[20vw] flex flex-col justify-center shadow-[0_35px_60px_-15px_rgba(0,0,0)] border-black border-2 z-10 absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-[#FECB63]`}
+      >
+        <form
+          onSubmit={submitEvent}
+          className="flex flex-col items-center p-[3.5rem]"
+        >
+          <input
             label="Korisničko ime"
             type="text"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            className="appearance-none"
+            placeholder="Unesi korisničko ime"
+            className="w-full px-4 py-2 
+            border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
+            focus:outline-none focus:outline-0
+            "
+          />
+          <input
+            label="Masa"
+            type="number"
+            onChange={(e) => setKile(e.target.value * 1000)}
+            icon={<FaWeightHanging />}
+            placeholder="Unesi masu u kg"
+            className="w-full mt-3 px-4 py-2 
+              border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
+              focus:outline-none focus:outline-0"
           />
           <select
             onChange={handleGender}
-            className="mt-3 ml-auto mr-auto bg-gray-50 border mb-4 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="
+            w-full px-5 mt-3 bg-gray-50 mb-4  text-gray-900 text-sm block p-2.5
+            border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
+            "
           >
             <option value="">Odaberi spol</option>
             <option value="Muško">Muško</option>
             <option value="Žensko">Žensko</option>
           </select>
-          <Input
-            label="Unesi masu u kilogramima"
-            type="number"
-            onChange={(e) => setKile(e.target.value * 1000)}
-            icon={<FaWeightHanging />}
-            className="appearance-none"
-          />
 
-          <Button type="submit" className="mt-3 ml-auto mr-auto">
+          <button
+            type="submit"
+            className="mt-3 ml-auto mr-auto py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
+          >
             Prijavi se
-          </Button>
+          </button>
         </form>
       </div>
-    </div>
+    </>
   );
 };
 
