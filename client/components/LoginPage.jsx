@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { FaWeightHanging } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { handleUserInfo } from "../src/actions";
+import { GrFormClose } from "react-icons/gr";
 
-const LoginPage = ({ socket }) => {
+const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const [close, setClose] = useState(false);
+
   //Podatci koje unosi korisnik
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
@@ -58,11 +61,21 @@ const LoginPage = ({ socket }) => {
       },
     });
   };
+
   return (
     <>
       <div
         className={`min-h-min min-w-[20vw] flex flex-col justify-center shadow-[0_35px_60px_-15px_rgba(0,0,0)] border-black border-2 z-10 absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-[#FECB63]`}
       >
+        <button
+          onClick={() => {
+            setDarken_bg("hidden");
+            setShowButtons("");
+            setShowForm(false);
+          }}
+        >
+          <GrFormClose className="absolute top-4 right-4 h-[30px] w-[30px]" />
+        </button>
         <form
           onSubmit={submitEvent}
           className="flex flex-col items-center p-[3.5rem]"
