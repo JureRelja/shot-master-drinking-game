@@ -19,11 +19,7 @@ export default function configureStore(preloadedState) {
   const middlewares = [loggerMiddleware, thunkMiddleware];
   const middlewareEnhancer = applyMiddleware(...middlewares);
 
-  const enhancers = [
-    middlewareEnhancer,
-    monitorReducersEnhancer,
-    composeWithDevTools(),
-  ];
+  const enhancers = [middlewareEnhancer, monitorReducersEnhancer];
   const composedEnhancers = compose(...enhancers);
 
   const store = createStore(

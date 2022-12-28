@@ -7,7 +7,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { handleUserInfo } from "../src/actions";
 import { GrFormClose } from "react-icons/gr";
 
-const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
+const LoginPage = ({
+  socket,
+  setDarken_bg,
+  setShowButtons,
+  setShowForm,
+  gameCreator,
+}) => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [close, setClose] = useState(false);
@@ -16,9 +22,7 @@ const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
   const [userName, setUserName] = useState("");
-  let gameCreator = true;
-
-  let roomID = state?.roomID || "";
+  const [roomID, setRoomID] = useState("");
 
   const getUserInfo = useSelector((state) => state.getUserInfo);
   const dispatch = useDispatch();
@@ -38,28 +42,31 @@ const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
     } else {
       dispatch(handleUserInfo(userName, r, kile));
       //Spajanje igrača u sobu
-      if (roomID != "") {
-        gameCreator = false;
-        console.log(gameCreator);
-      } else {
-        roomID = `${socket.id}${Math.random()}`;
-      }
-      localStorage.setItem("userName", userName);
-      socket.emit("ConnectingToRoom", {
-        userName,
-        socketID: socket.id,
-        gameCreator,
-        roomID,
-      });
+      new Promise((resolve, reject) => {
+        if (roomID == "") {
+          resolve(socket.id + Math.random());
+        }
+        resolve(roomID);
+      })
+        .then((roomID) => {
+          socket.emit("ConnectingToRoom", {
+            userName,
+            socketID: socket.id,
+            gameCreator,
+            roomID,
+          });
+
+          navigate(`/game?id=${roomID}`, {
+            state: {
+              userName: userName,
+              r: r,
+              kile: kile,
+              gameCreator: gameCreator,
+            },
+          });
+        })
+        .catch((err) => console.log(err));
     }
-    navigate(`/game?id=${roomID}`, {
-      state: {
-        userName: userName,
-        r: r,
-        kile: kile,
-        gameCreator: gameCreator,
-      },
-    });
   };
 
   return (
@@ -80,13 +87,27 @@ const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
           onSubmit={submitEvent}
           className="flex flex-col items-center p-[3.5rem]"
         >
+          {!gameCreator && (
+            <input
+              label="roomID"
+              type="text"
+              value={roomID}
+              onChange={(e) => setRoomID(e.target.value)}
+              placeholder="Unesi roomID"
+              className="w-full px-4 py-2 
+            border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
+            focus:outline-none focus:outline-0
+            "
+            />
+          )}
+
           <input
             label="Korisničko ime"
             type="text"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="Unesi korisničko ime"
-            className="w-full px-4 py-2 
+            className="mt-3 w-full px-4 py-2 
             border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
             focus:outline-none focus:outline-0
             "
@@ -113,12 +134,21 @@ const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
             <option value="Žensko">Žensko</option>
           </select>
 
-          <button
-            type="submit"
-            className="mt-3 ml-auto mr-auto py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
-          >
-            Prijavi se
-          </button>
+          {gameCreator ? (
+            <button
+              type="submit"
+              className="mt-3 ml-auto mr-auto py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
+            >
+              Kreiraj igru
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="mt-3 ml-auto mr-auto py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
+            >
+              Pridruži se Igri
+            </button>
+          )}
         </form>
       </div>
     </>

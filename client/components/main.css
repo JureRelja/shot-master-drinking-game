@@ -19,18 +19,6 @@ input[type="number"] {
   border: 2px solid;
 }
 
-@keyframes showAndHide {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 #orientation {
   writing-mode: vertical-rl;
 }

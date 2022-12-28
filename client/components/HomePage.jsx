@@ -1,26 +1,17 @@
 import React from "react";
-import { Fragment, useEffect, useState } from "react";
-import {
-  Tooltip,
-  Button,
-  Dialog,
-  DialogBody,
-  DialogHeader,
-  DialogFooter,
-} from "@material-tailwind/react";
-import logo from "../assets/logo.gif";
-import { Input } from "@material-tailwind/react";
+import { useState } from "react";
+import { Tooltip, Button } from "@material-tailwind/react";
 import "./main.css";
 import { FaWeightHanging } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { LoginPage, JoinGamePage } from "./";
+import { LoginPage } from "./";
 
 const HomePage = ({ socket }) => {
   const navigate = useNavigate();
   const [darken_bg, setDarken_bg] = useState("hidden");
   const [showForm, setShowForm] = useState(false);
-  const [showJoin, setShowJoin] = useState(false);
   const [showButtons, setShowButtons] = useState("");
+  const [gameCreator, setGameCreator] = useState(false);
 
   return (
     <>
@@ -41,16 +32,17 @@ const HomePage = ({ socket }) => {
               content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium magnam amet voluptatibus quisquam repudiandae, corrupti quas ipsa! Labore laboriosam quidem quae minus enim aliquid vel earum aperiam obcaecati corporis! Eveniet."
             >
               <Button
-                id="orientation"
-                className="m-0 p-0
+                className="m-0 p-0 grid place-items-center
                     h-full w-full rotate-180
-                    text-white normal-case font-medium
+                    text-white font-medium
                     rounded-none
                     bg-opacity-0 shadow-none sm:shadow-none hover:shadow-none
                     transition-all hover:bg-[#ee6a1e] hover:animate-[wiggle_1s_ease-in-out_infinite]
                 "
               >
-                Kako igrati
+                <p id="orientation" className="normal-case">
+                  Kako igrati?
+                </p>
               </Button>
             </Tooltip>
           </div>
@@ -60,7 +52,7 @@ const HomePage = ({ socket }) => {
           <img src="../assets/players.png" alt="" className="h-[90%] w-[90%]" />
           <div
             className={`
-            -mt-12 h-[170px] w-[25vw] flex flex-col justify-center items-center
+            -mt-12 h-[170px] min-w-[300px] w-[25vw] flex flex-col justify-center items-center
             transition-all duration-[900ms] ease-in-out 
             bg-[#FECB63] 
             shadow-[0px_5px_10px_0px_rgba(0,0,0)]
@@ -73,6 +65,7 @@ const HomePage = ({ socket }) => {
                 setDarken_bg("");
                 setShowButtons("hidden");
                 setShowForm(true);
+                setGameCreator(true);
               }}
             >
               Kreiraj igru
@@ -82,24 +75,20 @@ const HomePage = ({ socket }) => {
               onClick={() => {
                 setDarken_bg("");
                 setShowButtons("hidden");
-                setShowJoin(true);
+                setShowForm(true);
+                setGameCreator(false);
               }}
             >
               Pridruzi se postojecoj igri
             </button>
           </div>
-          {showJoin && (
-            <JoinGamePage
-              setDarken_bg={setDarken_bg}
-              setShowButtons={setShowButtons}
-              setShowJoin={setShowJoin}
-            />
-          )}
           {showForm && (
             <LoginPage
               setDarken_bg={setDarken_bg}
               setShowButtons={setShowButtons}
               setShowForm={setShowForm}
+              gameCreator={gameCreator}
+              socket={socket}
             />
           )}
         </div>
