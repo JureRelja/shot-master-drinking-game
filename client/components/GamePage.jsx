@@ -4,6 +4,7 @@ import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const GamePage = ({ socket }) => {
   const g_alch = 10.428;

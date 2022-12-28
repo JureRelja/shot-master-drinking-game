@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 const Test = (props) => {
   const getUserInfo = useSelector((state) => state.getUserInfo);
 
-  const { userName, r, kilaza } = getUserInfo;
+  const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
 
   return (
     <div className="h-[94vh] w-[90vw] border-2 border-red-900 m-auto mt-[3vh] grid grid-cols-6 grid-rows-5 gap-4 overscroll-contain text-white">
@@ -17,7 +17,7 @@ const Test = (props) => {
           grid place-items-center
           shadow-2xl rounded-xl"
       >
-        Player1 UserInfo: {userName} {r} {kilaza}
+        Player1 UserInfo: {userName} {r} {kilaza} {gameCreator} {roomID}
       </div>
       <div
         className="

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Input } from "@material-tailwind/react";
-import { Button } from "@material-tailwind/react";
 import { FaWeightHanging } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { handleUserInfo } from "../src/actions";
@@ -15,7 +13,6 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
   const [userName, setUserName] = useState("");
   const [roomID, setRoomID] = useState("");
 
-  const getUserInfo = useSelector((state) => state.getUserInfo);
   const dispatch = useDispatch();
 
   const handleGender = (e) => {
@@ -31,12 +28,15 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      if (gameCreator) {
+      console.log(gameCreator);
+      if (!gameCreator) {
         setRoomID(`${socket.id}${Math.random()}`);
+      } else {
+        if (roomID == "") {
+          alert("Niste unijeli ID igre");
+        }
       }
-      if (roomID == "") {
-        alert("Niste unijeli ID igre");
-      }
+
       //Spremanje podataka u redux store
       dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
       //Slanje podataka serveru

@@ -88,6 +88,7 @@ const HomePage = ({ socket }) => {
               setDarken_bg={setDarken_bg}
               gameCreator={gameCreator}
               setShowForm={setShowForm}
+              socket={socket}
             />
           )}
         </div>

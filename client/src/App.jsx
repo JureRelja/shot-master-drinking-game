@@ -1,11 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {
-  HomePage,
-  LoginPage,
-  GamePage,
-  Test,
-  JoinGamePage,
-} from "../components";
+import { HomePage, GamePage, Test } from "../components";
 import socketIO from "socket.io-client";
 
 const socket = socketIO("http://localhost:4000");
