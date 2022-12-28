@@ -30,7 +30,6 @@ const JoinGamePage = ({
         <button
           onClick={() => {
             setDarken_bg("hidden");
-            setShowButtons("");
             setShowJoin(false);
           }}
         >

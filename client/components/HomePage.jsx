@@ -10,16 +10,12 @@ import {
 } from "@material-tailwind/react";
 import logo from "../assets/logo.gif";
 import "./main.css";
-import { FaWeightHanging } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { LoginPage, JoinGamePage } from "./";
+import { LoginPage } from "./";
 
 const HomePage = ({ socket }) => {
-  const navigate = useNavigate();
   const [darken_bg, setDarken_bg] = useState("hidden");
   const [showForm, setShowForm] = useState(false);
-  const [showJoin, setShowJoin] = useState(false);
-  const [showButtons, setShowButtons] = useState("");
+  const [gameCreator, setGameCreator] = useState(false);
 
   return (
     <>
@@ -70,7 +66,7 @@ const HomePage = ({ socket }) => {
               className={`py-2 px-5 border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#FD7221] text-white`}
               onClick={() => {
                 setDarken_bg("");
-                setShowButtons("hidden");
+                setGameCreator(true);
                 setShowForm(true);
               }}
             >
@@ -80,24 +76,17 @@ const HomePage = ({ socket }) => {
               className={`mt-3 bg-white py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] hover:bg-[#fd853f] hover:text-white`}
               onClick={() => {
                 setDarken_bg("");
-                setShowButtons("hidden");
-                setShowJoin(true);
+                setGameCreator(false);
+                setShowForm(true);
               }}
             >
               Pridruzi se postojecoj igri
             </button>
           </div>
-          {showJoin && (
-            <JoinGamePage
-              setDarken_bg={setDarken_bg}
-              setShowButtons={setShowButtons}
-              setShowJoin={setShowJoin}
-            />
-          )}
           {showForm && (
             <LoginPage
               setDarken_bg={setDarken_bg}
-              setShowButtons={setShowButtons}
+              gameCreator={gameCreator}
               setShowForm={setShowForm}
             />
           )}

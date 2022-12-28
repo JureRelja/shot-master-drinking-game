@@ -5,12 +5,10 @@ import { FaWeightHanging } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { handleUserInfo } from "../src/actions";
 import { GrFormClose } from "react-icons/gr";
+import { useNavigate } from "react-router-dom";
 
-const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
+const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const [close, setClose] = useState(false);
-
   //Podatci koje unosi korisnik
   const [kile, setKile] = useState(0);
   const [r, setR] = useState(0);
@@ -62,7 +60,6 @@ const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
         <button
           onClick={() => {
             setDarken_bg("hidden");
-            setShowButtons("");
             setShowForm(false);
           }}
         >
@@ -104,6 +101,19 @@ const LoginPage = ({ socket, setDarken_bg, setShowButtons, setShowForm }) => {
             <option value="Muško">Muško</option>
             <option value="Žensko">Žensko</option>
           </select>
+          {!gameCreator ? (
+            <input
+              label="roomID"
+              type="text"
+              value={roomID}
+              onChange={(e) => setRoomID(e.target.value)}
+              placeholder="Unesi roomID"
+              className="w-full px-4 py-2 
+            border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
+            focus:outline-none focus:outline-0
+            "
+            />
+          ) : null}
 
           <button
             type="submit"
