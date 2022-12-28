@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogFooter,
 } from "@material-tailwind/react";
-import logo from "../assets/logo.gif";
 import "./main.css";
 import { LoginPage } from "./";
 
@@ -38,7 +37,7 @@ const HomePage = ({ socket }) => {
               <Button
                 id="orientation"
                 className="m-0 p-0
-                    h-full w-full rotate-180
+                    h-full w-full 
                     text-white normal-case font-medium
                     rounded-none
                     bg-opacity-0 shadow-none sm:shadow-none hover:shadow-none

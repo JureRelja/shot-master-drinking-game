@@ -2,9 +2,8 @@ import { Button } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Player from "./Player";
 
 const GamePage = ({ socket }) => {
   const g_alch = 10.428;
@@ -18,33 +17,37 @@ const GamePage = ({ socket }) => {
   //BAC level u krvi
   const [ciljaniBAC, setCiljaniBAC] = useState(0);
   const [ukupniBAC, setUkupniBAC] = useState(0);
+
+  const [brojPica, setBrojPica] = useState(0);
+
   const [igraci, setIgraci] = useState([]);
 
   const getUserInfo = useSelector((state) => state.getUserInfo);
   const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
 
   const shootEvent = () => {
-    setUkupniBAC(ukupniBAC + (g_alch / (kile * r)) * 1000);
+    setUkupniBAC(ukupniBAC + (g_alch / (kilaza * r)) * 1000);
     socket.emit("ShootEvent", "ShootEvent");
+    setBrojPica(brojPica + 1);
   };
 
   const startGameEvent = () => {
-    socket.emit("startGame", "start");
-    setI(i + 1);
+    socket.emit("startGame", roomID);
   };
-
+  console.log(igraci);
   useEffect(() => {
     socket.on("ConnectedToRoomResponse", (e) => {
-      console.log("ConnectedToRoomResponse: ", e);
-      setIgraci(...igraci, e);
+      setIgraci([...igraci, e]);
+      console.log("igraci: ", igraci);
     });
-  }, [igraci, socket]);
+  }, [socket]);
 
   useEffect(() => {
     socket.on("BacTarget", (e) => {
-      console.log("Ciljani level alkhola u krvi: ", e);
       setCiljaniBAC(Math.round(e * 100) / 100);
+      setI(i + 1);
     });
+
     if (i != 0 && preostaloVrijeme >= 0) {
       let setTimer = setInterval(() => {
         if (ukupniBAC - (1 / 120) * 0.15 <= 0) {
@@ -54,7 +57,6 @@ const GamePage = ({ socket }) => {
         }
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
-        console.log(ukupniBAC);
         if (preostaloVrijeme <= 0.1) {
           socket.emit("gameEnded", {
             userName: userName,
@@ -66,7 +68,7 @@ const GamePage = ({ socket }) => {
 
       return () => clearInterval(setTimer);
     }
-  }, [preostaloVrijeme, i]);
+  });
 
   useEffect(() => {
     if (showImage) {
@@ -108,6 +110,9 @@ const GamePage = ({ socket }) => {
           <div id="timer">
             <span className="">Timer: {vrijemeUSekundama}</span>
           </div>
+
+          <span className="">Broj popijenih pića: {brojPica}</span>
+
           <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
           {gameCreator ? (
             <Button
@@ -122,6 +127,7 @@ const GamePage = ({ socket }) => {
             </Button>
           ) : null}
         </div>
+        <Player igraci={igraci} />
         <div
           id="second_player"
           className="flex flex-col justify-center w-[30%]"

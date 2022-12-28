@@ -21,6 +21,9 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
     } else if (e.target.value === "Žensko") {
       setR(0.55);
     }
+    if (gameCreator) {
+      setRoomID(`${socket.id}${Math.random()}`);
+    }
   };
 
   const submitEvent = (event) => {
@@ -28,13 +31,8 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      console.log(gameCreator);
-      if (!gameCreator) {
-        setRoomID(`${socket.id}${Math.random()}`);
-      } else {
-        if (roomID == "") {
-          alert("Niste unijeli ID igre");
-        }
+      if (roomID == "") {
+        alert("Niste unijeli ID sobe");
       }
 
       //Spremanje podataka u redux store
@@ -48,8 +46,8 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
         r,
         kile,
       });
+      navigate(`/game?id=${roomID}`);
     }
-    navigate(`/game?id=${roomID}`);
   };
 
   return (
