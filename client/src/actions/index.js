@@ -19,13 +19,15 @@ export const handleLoggin = () => {
   };
 };
 
-export const handleUserInfo = (userName, r, kilaza) => {
+export const handleUserInfo = (userName, r, kilaza,  gameCreator, roomID) => {
   return {
     type: USER_INFO,
     payload: {
       userName: userName,
       kilaza: kilaza,
       r: r,
+      roomID: roomID,
+      gameCreator: gameCreator,
     },
   };
 };

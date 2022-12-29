@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { LoginPage } from "./";
 
 const HomePage = ({ socket }) => {
-  const navigate = useNavigate();
   const [darken_bg, setDarken_bg] = useState("hidden");
   const [showForm, setShowForm] = useState(false);
   const [showButtons, setShowButtons] = useState("");
@@ -63,7 +62,7 @@ const HomePage = ({ socket }) => {
               className={`py-2 px-5 border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#FD7221] text-white`}
               onClick={() => {
                 setDarken_bg("");
-                setShowButtons("hidden");
+                setGameCreator(true);
                 setShowForm(true);
                 setGameCreator(true);
               }}
@@ -85,9 +84,8 @@ const HomePage = ({ socket }) => {
           {showForm && (
             <LoginPage
               setDarken_bg={setDarken_bg}
-              setShowButtons={setShowButtons}
-              setShowForm={setShowForm}
               gameCreator={gameCreator}
+              setShowForm={setShowForm}
               socket={socket}
             />
           )}

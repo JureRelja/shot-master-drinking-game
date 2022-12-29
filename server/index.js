@@ -15,7 +15,7 @@ const socketIO = require("socket.io")(http, {
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
-
+let igraci = [];
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
 
@@ -23,14 +23,14 @@ socketIO.on("connection", (socket) => {
   socket.on("ConnectingToRoom", (igrac) => {
     //Soba u koju se igrač spaja
     socket.join(igrac.roomID);
-    //Salje igračima listu igrača spajanje na igru
-    console.log(igrac.roomID)
+
+    
     socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', igrac);
     })
   //Kada igrač klikne na start igre, počinje igra
-  socket.on("startGame", (e) => {
-    console.log("Game", e);
-    socketIO.emit("BacTarget", getRandomArbitrary(2, 3));
+  socket.on("startGame", (roomID) => {
+    console.log("Game", roomID);
+    socketIO.to(roomID).emit("BacTarget", getRandomArbitrary(2, 3));
   });
   //Kraj igre
   socketIO.on("gameEnded", (e) => {

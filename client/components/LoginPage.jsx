@@ -15,8 +15,6 @@ const LoginPage = ({
   gameCreator,
 }) => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const [close, setClose] = useState(false);
 
   //Podatci koje unosi korisnik
   const [kile, setKile] = useState(0);
@@ -24,7 +22,6 @@ const LoginPage = ({
   const [userName, setUserName] = useState("");
   const [roomID, setRoomID] = useState("");
 
-  const getUserInfo = useSelector((state) => state.getUserInfo);
   const dispatch = useDispatch();
 
   const handleGender = (e) => {
@@ -56,14 +53,7 @@ const LoginPage = ({
             roomID,
           });
 
-          navigate(`/game?id=${roomID}`, {
-            state: {
-              userName: userName,
-              r: r,
-              kile: kile,
-              gameCreator: gameCreator,
-            },
-          });
+          navigate(`/game?id=${roomID}`);
         })
         .catch((err) => console.log(err));
     }
