@@ -9,7 +9,6 @@ import { LoginPage } from "./";
 const HomePage = ({ socket }) => {
   const [darken_bg, setDarken_bg] = useState("hidden");
   const [showForm, setShowForm] = useState(false);
-  const [showButtons, setShowButtons] = useState("");
   const [gameCreator, setGameCreator] = useState(false);
 
   return (
@@ -73,7 +72,6 @@ const HomePage = ({ socket }) => {
               className={`mt-3 bg-white py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] hover:bg-[#fd853f] hover:text-white`}
               onClick={() => {
                 setDarken_bg("");
-                setShowButtons("hidden");
                 setShowForm(true);
                 setGameCreator(false);
               }}

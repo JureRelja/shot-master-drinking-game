@@ -7,13 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { handleUserInfo } from "../src/actions";
 import { GrFormClose } from "react-icons/gr";
 
-const LoginPage = ({
-  socket,
-  setDarken_bg,
-  setShowButtons,
-  setShowForm,
-  gameCreator,
-}) => {
+const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
   const navigate = useNavigate();
 
   //Podatci koje unosi korisnik
@@ -67,7 +61,6 @@ const LoginPage = ({
         <button
           onClick={() => {
             setDarken_bg("hidden");
-            setShowButtons("");
             setShowForm(false);
           }}
         >
