@@ -34,11 +34,11 @@ const GamePage = ({ socket }) => {
   const startGameEvent = () => {
     socket.emit("startGame", roomID);
   };
-  console.log(igraci);
+
   useEffect(() => {
     socket.on("ConnectedToRoomResponse", (e) => {
-      setIgraci([...igraci, e]);
-      console.log("igraci: ", igraci);
+      setIgraci(e);
+      console.log(e);
     });
   }, [socket]);
 

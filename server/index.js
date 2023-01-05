@@ -16,7 +16,7 @@ const socketIO = require("socket.io")(http, {
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
-let sveSobeIgraca = [[]];
+let sveSobeIgraca = [];
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
 
@@ -25,17 +25,27 @@ socketIO.on("connection", (socket) => {
     //Soba u koju se igrač spaja
     socket.join(igrac.roomID);
 
-    for (pojedinacnaSobaIgraca in sveSobeIgraca) {
+    let postojiSoba = false;
+    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
       if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
         pojedinacnaSobaIgraca.push(igrac);
+        postojiSoba = true;
+        console.log(sveSobeIgraca)
       }
+    })
+
+    if (postojiSoba == false) {
+      sveSobeIgraca.push([igrac]);
+      console.log(sveSobeIgraca)
     }
     
-    for (pojedinacnaSobaIgraca in sveSobeIgraca) {
+    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
       if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
         socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
+        console.log(pojedinacnaSobaIgraca)
       }
-    }    
+    })  
+
     })
   //Kada igrač klikne na start igre, počinje igra
   socket.on("startGame", (roomID) => {
