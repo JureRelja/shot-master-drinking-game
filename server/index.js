@@ -3,6 +3,7 @@ const app = express();
 const PORT = 4000;
 const http = require("http").Server(app);
 const cors = require("cors");
+const e = require("express");
 
 app.use(cors());
 const socketIO = require("socket.io")(http, {
@@ -15,7 +16,7 @@ const socketIO = require("socket.io")(http, {
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
-let igraci = [];
+let sveSobeIgraca = [[]];
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
 
@@ -24,8 +25,17 @@ socketIO.on("connection", (socket) => {
     //Soba u koju se igrač spaja
     socket.join(igrac.roomID);
 
+    for (pojedinacnaSobaIgraca in sveSobeIgraca) {
+      if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
+        pojedinacnaSobaIgraca.push(igrac);
+      }
+    }
     
-    socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', igrac);
+    for (pojedinacnaSobaIgraca in sveSobeIgraca) {
+      if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
+        socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
+      }
+    }    
     })
   //Kada igrač klikne na start igre, počinje igra
   socket.on("startGame", (roomID) => {
