@@ -5,9 +5,9 @@ const Player = ({ igraci }) => {
   return (
     <>
       <div className="absolute grid place-item-center">
-        {igraci.map((igrac) => {
-          <span key={igrac.socketID}>Username: {igrac.userName}</span>;
-        })}
+        {igraci.map((igrac) => (
+          <span key={igrac.socketID}>Username: {igrac.userName}</span>
+        ))}
       </div>
     </>
   );
