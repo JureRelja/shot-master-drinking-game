@@ -26,13 +26,22 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
     }
   };
 
+  //Provjera koliko je korisnika u nekoj određenoj sobi
+  function asyncEmit(data) {
+    return new Promise(function (resolve, reject) {
+      socket.emit("ConnectingToRoom", data);
+      socket.on("Response", (result) => {
+        resolve(result);
+      });
+      setTimeout(reject, 29000);
+    });
+  }
+
   const submitEvent = (event) => {
     event.preventDefault();
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      dispatch(handleUserInfo(userName, r, kile));
-      //Spajanje igrača u sobu
       new Promise((resolve, reject) => {
         if (roomID == "") {
           resolve(socket.id + Math.random());
@@ -44,10 +53,37 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
             userName,
             socketID: socket.id,
             gameCreator,
-            roomID,
+            roomID: roomID,
           });
-
-          navigate(`/game?id=${roomID}`);
+          socket.on("Response", (brIgracaUSobi) => {
+            console.log(brIgracaUSobi);
+            if (brIgracaUSobi < 2) {
+              dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
+              navigate(`/game?id=${roomID}`);
+            } else {
+              alert("nista od toga");
+            }
+          });
+          // socket.emit("ConnectingToRoom", {
+          //   userName,
+          //   socketID: socket.id,
+          //   gameCreator,
+          //   roomID: roomID,
+          // });
+          // dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
+          // navigate(`/game?id=${roomID}`);
+          // if (brIgracaUSobi >= 2) {
+          //   alert("Soba je puna");
+          // } else {
+          //   dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
+          //   navigate(`/game?id=${roomID}`);
+          // }
+          // provjeraBrojIgraca({
+          //   userName,
+          //   socketID: socket.id,
+          //   gameCreator,
+          //   roomID: roomID,
+          // });
         })
         .catch((err) => console.log(err));
     }

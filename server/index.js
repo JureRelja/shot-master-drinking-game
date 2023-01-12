@@ -23,32 +23,80 @@ let sveSobeIgraca = [];
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
 
-  //Igrač se spaja na novu/postojeću igru
+  //Igrač se spaja na novu/postojeću sobu
   socket.on("ConnectingToRoom", (igrac) => {
-    //Soba u koju se igrač spaja
-    socket.join(igrac.roomID);
-
-    //Sprema igrača u sobu
+    
     let postojiSoba = false;
-    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-      if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
-        
-        pojedinacnaSobaIgraca.push(igrac);
-        postojiSoba = true;
+    let brIgracauSobi = socketIO.sockets.adapter.rooms.get(igrac.roomID)?.size ?? 0;
+    let svePrazno = true;
+    //Šalje broj igrača u sobi
+      socket.join(igrac.roomID);
+      
+      new Promise((resolve, reject) => {
+        socketIO.to(igrac.roomID).emit('Response', brIgracauSobi);
+        sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+        if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {   
+          pojedinacnaSobaIgraca.push(igrac)
+          postojiSoba = true;
+           socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
+           console.log("poslano kad postoji soba", pojedinacnaSobaIgraca)
+        }
+      })
+      if (postojiSoba == false) {
+        sveSobeIgraca.push([igrac]);    
+        if (svePrazno == true) {
+           sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+             if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
+               socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
+               console.log("poslano kad ne postoji soba", igrac.roomID)
+             }
+          })
+        }
       }
-    })
 
-    if (postojiSoba == false) {
-      sveSobeIgraca.push([igrac]);
-    } 
-    //Šalje svim igračima u sobi podatke o igračima u toj sobi
-    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-      if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
-        socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
-      }
-    })  
+      resolve(sveSobeIgraca)
+      }).then((sveSobeIgraca) => {
+        sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+          if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
+            pojedinacnaSobaIgraca.forEach((igrac) => {
+              socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
+          })
+            
+            console.log(pojedinacnaSobaIgraca)
+          }
+        })
+      }).catch((err) => {
+        console.log(err)
+      })
+      
+      // sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+      //   if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {   
+      //     pojedinacnaSobaIgraca.push(igrac);
+      //     console.log("prvo", pojedinacnaSobaIgraca)
+      //     postojiSoba = true;
+      //     socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
+      //   }
+      // })
 
-    })
+      //   if (postojiSoba == false) {
+      //     sveSobeIgraca.push([igrac]);
+          
+      //     if (svePrazno == true) {
+      //       sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+      //         if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
+      //           console.log("drugo", pojedinacnaSobaIgraca)
+      //           socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
+      //           console.log("drugo", igrac.roomID)
+      //         }
+      //     })
+      //     }
+      //   }
+      //socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', sveSobeIgraca);
+
+      
+  })
+   
+
   //Kada igrač klikne na start igre, počinje igra
   socket.on("startGame", (roomID) => {
     console.log("Game", roomID);
@@ -93,8 +141,6 @@ socketIO.on("connection", (socket) => {
       resolve();
     }).then(() => {
       socket.disconnect();
-      console.log(sveSobeIgraca)
-
     })
    });
 });
