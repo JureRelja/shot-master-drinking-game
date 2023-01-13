@@ -21,6 +21,7 @@ const GamePage = ({ socket }) => {
   const [brojPica, setBrojPica] = useState(0);
 
   const [igraci, setIgraci] = useState([]);
+  const [counter, setCounter] = useState(0);
 
   const getUserInfo = useSelector((state) => state.getUserInfo);
   const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
@@ -34,13 +35,14 @@ const GamePage = ({ socket }) => {
   const startGameEvent = () => {
     socket.emit("startGame", roomID);
   };
-  console.log(igraci);
+
   useEffect(() => {
     socket.on("ConnectedToRoomResponse", (e) => {
-      setIgraci([...igraci, e]);
-      console.log("igraci: ", igraci);
+      setIgraci(e);
+      console.log(e);
+      console.log("test");
     });
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
     socket.on("BacTarget", (e) => {
@@ -127,6 +129,16 @@ const GamePage = ({ socket }) => {
             </Button>
           ) : null}
         </div>
+        <Button
+          color="green"
+          onClick={() => {
+            setCounter(counter + 1);
+          }}
+          className=""
+        >
+          tigger
+        </Button>
+        <span>broj: {counter}</span>
         <Player igraci={igraci} />
         <div
           id="second_player"
