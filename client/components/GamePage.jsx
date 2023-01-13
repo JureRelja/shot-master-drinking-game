@@ -42,7 +42,7 @@ const GamePage = ({ socket }) => {
       console.log(e);
       console.log("test");
     });
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     socket.on("BacTarget", (e) => {
@@ -70,7 +70,7 @@ const GamePage = ({ socket }) => {
 
       return () => clearInterval(setTimer);
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (showImage) {

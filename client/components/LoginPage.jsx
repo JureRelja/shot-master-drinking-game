@@ -37,15 +37,17 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
     });
   }
 
-  const submitEvent = (event) => {
+  const submitEvent = async (event) => {
     event.preventDefault();
     if (r == 0 || kile == 0) {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
       new Promise((resolve, reject) => {
         if (roomID == "") {
+          //resolve(socket.id + Math.random());
           resolve(socket.id + Math.random());
         }
+
         resolve(roomID);
       })
         .then((roomID) => {
@@ -53,31 +55,17 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
             userName,
             socketID: socket.id,
             gameCreator,
-            roomID: roomID,
+            roomID,
           });
+
           socket.on("Response", (brIgracaUSobi) => {
-            console.log(brIgracaUSobi);
-            if (brIgracaUSobi < 2) {
+            if (brIgracaUSobi < 3) {
               dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
               navigate(`/game?id=${roomID}`);
             } else {
               alert("nista od toga");
             }
           });
-          // socket.emit("ConnectingToRoom", {
-          //   userName,
-          //   socketID: socket.id,
-          //   gameCreator,
-          //   roomID: roomID,
-          // });
-          // dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
-          // navigate(`/game?id=${roomID}`);
-          // if (brIgracaUSobi >= 2) {
-          //   alert("Soba je puna");
-          // } else {
-          //   dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
-          //   navigate(`/game?id=${roomID}`);
-          // }
           // provjeraBrojIgraca({
           //   userName,
           //   socketID: socket.id,
