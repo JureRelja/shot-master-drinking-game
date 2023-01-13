@@ -11,7 +11,6 @@ const socketIO = require("socket.io")(http, {
   },
 });
 
-
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -24,9 +23,8 @@ socketIO.on("connection", (socket) => {
     //Soba u koju se igrač spaja
     socket.join(igrac.roomID);
 
-    
-    socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', igrac);
-    })
+    socketIO.to(igrac.roomID).emit("ConnectedToRoomResponse", igrac);
+  });
   //Kada igrač klikne na start igre, počinje igra
   socket.on("startGame", (roomID) => {
     console.log("Game", roomID);
@@ -46,8 +44,8 @@ socketIO.on("connection", (socket) => {
     console.log("🔥: A user disconnected");
     //Salje igračima listu igrača nakon odspajanja
 
-     socket.disconnect();
-   });
+    socket.disconnect();
+  });
 });
 
 app.get("/api", (req, res) => {

@@ -22,7 +22,7 @@ const HomePage = ({ socket }) => {
         <div
           className={`absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-40 backdrop-filter backdrop-blur-sm ${darken_bg}`}
         ></div>
-        <div className="fixed grid grid-cols-1 grid-rows-5 gap-2 w-[30px] bg-[#F69156] h-screen top-0 left-0">
+        <div className="fixed grid grid-cols-1 grid-rows-5 gap-2 w-[30px] bg-[#F69156] h-screen top-0 left-0 drop-shadow-lg">
           <div className="bg-[#FD7221]">
             <Tooltip
               placement="right"
@@ -44,7 +44,6 @@ const HomePage = ({ socket }) => {
               </Button>
             </Tooltip>
           </div>
-          <div></div>
         </div>
         <div className="flex flex-col items-center">
           <img src="../assets/players.png" alt="" className="h-[90%] w-[90%]" />
