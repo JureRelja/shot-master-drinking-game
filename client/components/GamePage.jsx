@@ -138,16 +138,6 @@ const GamePage = ({ socket }) => {
             </Button>
           ) : null}
         </div>
-        <Button
-          color="green"
-          onClick={() => {
-            setCounter(counter + 1);
-          }}
-          className=""
-        >
-          tigger
-        </Button>
-        <span>broj: {counter}</span>
         <Player igraci={igraci} />
         <div
           id="second_player"
