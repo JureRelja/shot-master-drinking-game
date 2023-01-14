@@ -37,12 +37,21 @@ const GamePage = ({ socket }) => {
   };
 
   useEffect(() => {
-    socket.on("ConnectedToRoomResponse", (e) => {
+    socket.on("igraciUSobi", (e) => {
       setIgraci(e);
       console.log(e);
       console.log("test");
     });
   }, [socket]);
+
+  useEffect(() => {
+    socket.emit("fetchIgraceUSobi", roomID);
+    socket.on("igraciUSobi", (e) => {
+      setIgraci(e);
+      console.log(e);
+      console.log("test");
+    });
+  }, []);
 
   useEffect(() => {
     socket.on("BacTarget", (e) => {

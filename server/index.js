@@ -24,47 +24,38 @@ socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
 
   //Igrač se spaja na novu/postojeću sobu
-  socket.on("ConnectingToRoom", (igrac) => {
+  socket.on("userDataLogin", (igrac) => {
     
 
     let postojiSoba = false;
     let brIgracauSobi = socketIO.sockets.adapter.rooms.get(igrac.roomID)?.size ?? 0;
-    let svePrazno = true;
+    
     //Šalje broj igrača u sobi
     
-        
 
-        socket.emit('Response', brIgracauSobi);
+    if (brIgracauSobi < 2) {
+      //Dodaje igrača u sobu
+      socket.join(igrac.roomID);
 
-        if (brIgracauSobi > 3) {
-          return;
+      //Dodaje igrača u listu igrača
+      sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+        if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {   
+          pojedinacnaSobaIgraca.push(igrac)
+          postojiSoba = true;
         }
+      })
 
-        socket.join(igrac.roomID);
+      if (postojiSoba == false) {
+        sveSobeIgraca.push([igrac]);    
+      }
+    }
+
+    socket.emit('BrojIgracaUSobi', brIgracauSobi);
+    
+
+        
+          
       
-        
-
-          sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-          if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {   
-            pojedinacnaSobaIgraca.push(igrac)
-            postojiSoba = true;
-              //socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
-            //console.log("poslano kad postoji soba", pojedinacnaSobaIgraca)
-          }
-        })
-        if (postojiSoba == false) {
-          sveSobeIgraca.push([igrac]);    
-        }
-
-        setTimeout(() => {
-          sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-            if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
-                socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
-                console.log("poslano u thenu", igrac.userName)
-            }
-          })
-        }, 500)
-
       
       // sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
       //   if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {   
@@ -91,6 +82,15 @@ socketIO.on("connection", (socket) => {
       //socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', sveSobeIgraca);
 
       
+  })
+
+  socket.on("fetchIgraceUSobi", (roomID) => {
+    
+    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+      if (roomID == pojedinacnaSobaIgraca[0].roomID) {
+        socketIO.to(roomID).emit('igraciUSobi', pojedinacnaSobaIgraca);
+      }
+    })
   })
    
 
@@ -130,7 +130,7 @@ socketIO.on("connection", (socket) => {
             }
             //Šalje novu listu igrača svim igračima u sobi
             pojedinacnaSobaIgraca.forEach((igrac) => {
-              socketIO.to(igrac.roomID).emit('ConnectedToRoomResponse', pojedinacnaSobaIgraca);
+              socketIO.to(igrac.roomID).emit('igraciUSobi', pojedinacnaSobaIgraca);
             })
         }
         

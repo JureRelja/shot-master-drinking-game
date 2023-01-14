@@ -15,6 +15,7 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
   const [r, setR] = useState(0);
   const [userName, setUserName] = useState("");
   const [roomID, setRoomID] = useState("");
+  const [igraci, setIgraci] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -24,56 +25,31 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
     } else if (e.target.value === "Žensko") {
       setR(0.55);
     }
+    if (roomID == "") {
+      setRoomID(socket.id + Math.random());
+    }
   };
 
-  //Provjera koliko je korisnika u nekoj određenoj sobi
-  function asyncEmit(data) {
-    return new Promise(function (resolve, reject) {
-      socket.emit("ConnectingToRoom", data);
-      socket.on("Response", (result) => {
-        resolve(result);
-      });
-      setTimeout(reject, 29000);
-    });
-  }
-
-  const submitEvent = async (event) => {
+  const submitEvent = (event) => {
     event.preventDefault();
-    if (r == 0 || kile == 0) {
+    if (r == 0 || kile == 0 || userName == "") {
       alert("Niste unijeli masu ili odabrali spol");
     } else {
-      new Promise((resolve, reject) => {
-        if (roomID == "") {
-          //resolve(socket.id + Math.random());
-          resolve(socket.id + Math.random());
+      socket.emit("userDataLogin", {
+        userName,
+        socketID: socket.id,
+        gameCreator,
+        roomID,
+      });
+
+      socket.on("BrojIgracaUSobi", (brIgracaUSobi) => {
+        if (brIgracaUSobi < 2) {
+          dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
+          navigate(`/game?id=${roomID}`);
+        } else {
+          alert("nista od toga");
         }
-
-        resolve(roomID);
-      })
-        .then((roomID) => {
-          socket.emit("ConnectingToRoom", {
-            userName,
-            socketID: socket.id,
-            gameCreator,
-            roomID,
-          });
-
-          socket.on("Response", (brIgracaUSobi) => {
-            if (brIgracaUSobi < 3) {
-              dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
-              navigate(`/game?id=${roomID}`);
-            } else {
-              alert("nista od toga");
-            }
-          });
-          // provjeraBrojIgraca({
-          //   userName,
-          //   socketID: socket.id,
-          //   gameCreator,
-          //   roomID: roomID,
-          // });
-        })
-        .catch((err) => console.log(err));
+      });
     }
   };
 
