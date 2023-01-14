@@ -6,10 +6,17 @@ import { FaWeightHanging } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { LoginPage } from "./";
 
+import Rive from "@rive-app/react-canvas";
+import Cheers from "../assets/cheers.riv";
+import Test from "../assets/new_file.riv";
+
 const HomePage = ({ socket }) => {
   const [darken_bg, setDarken_bg] = useState("hidden");
   const [showForm, setShowForm] = useState(false);
   const [gameCreator, setGameCreator] = useState(false);
+
+  const STATE_MACHINE_NAME = "Cheers";
+  const TOGGLE_NAME = "Toggle";
 
   return (
     <>
@@ -46,7 +53,8 @@ const HomePage = ({ socket }) => {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <img src="../assets/players.png" alt="" className="h-[90%] w-[90%]" />
+          <Rive src={Cheers} className="h-[50vh] w-[70vw]" />{" "}
+          <Rive src={Test} className="absolute h-[50vh] w-[70vw]" />{" "}
           <div
             className={`
             -mt-12 h-[170px] min-w-[300px] w-[25vw] flex flex-col justify-center items-center
