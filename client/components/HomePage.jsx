@@ -6,6 +6,10 @@ import { FaWeightHanging } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { LoginPage } from "./";
 
+import Rive from "@rive-app/react-canvas";
+import Cheers from "../assets/cheers.riv";
+import Test from "../assets/new_file.riv";
+
 const HomePage = ({ socket }) => {
   const [darken_bg, setDarken_bg] = useState("hidden");
   const [showForm, setShowForm] = useState(false);
@@ -22,7 +26,7 @@ const HomePage = ({ socket }) => {
         <div
           className={`absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-40 backdrop-filter backdrop-blur-sm ${darken_bg}`}
         ></div>
-        <div className="fixed grid grid-cols-1 grid-rows-5 gap-2 w-[30px] bg-[#F69156] h-screen top-0 left-0">
+        <div className="fixed grid grid-cols-1 grid-rows-5 gap-2 w-[30px] bg-[#F69156] h-screen top-0 left-0 drop-shadow-lg">
           <div className="bg-[#FD7221]">
             <Tooltip
               placement="right"
@@ -44,10 +48,9 @@ const HomePage = ({ socket }) => {
               </Button>
             </Tooltip>
           </div>
-          <div></div>
         </div>
         <div className="flex flex-col items-center">
-          <img src="../assets/players.png" alt="" className="h-[90%] w-[90%]" />
+          <Rive src={Cheers} className="h-[50vh] w-[70vw]" />{" "}
           <div
             className={`
             -mt-12 h-[170px] min-w-[300px] w-[25vw] flex flex-col justify-center items-center

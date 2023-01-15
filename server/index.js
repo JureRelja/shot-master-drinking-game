@@ -19,7 +19,6 @@ function getRandomArbitrary(min, max) {
 
 let sveSobeIgraca = [];
 
-
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
 
@@ -78,7 +77,7 @@ socketIO.on("connection", (socket) => {
   socket.on("disconnect", () => {
     //console.log(sveSobeIgraca)
     console.log("🔥: A user disconnected");
-    
+
     //Briše igrača iz sobe
     new Promise((resolve, reject) => {
       sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
@@ -105,8 +104,8 @@ socketIO.on("connection", (socket) => {
       resolve();
     }).then(() => {
       socket.disconnect();
-    })
-   });
+    });
+  });
 });
 
 app.get("/api", (req, res) => {

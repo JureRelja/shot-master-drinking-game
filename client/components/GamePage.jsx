@@ -4,6 +4,10 @@ import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
 import { useSelector } from "react-redux";
 import Player from "./Player";
+import Player1 from "../assets/player1.riv";
+
+import Rive from "@rive-app/react-canvas";
+import { useRive, useStateMachineInput } from "@rive-app/react-canvas";
 
 const GamePage = ({ socket }) => {
   const g_alch = 10.428;
@@ -25,6 +29,22 @@ const GamePage = ({ socket }) => {
 
   const getUserInfo = useSelector((state) => state.getUserInfo);
   const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
+
+  const STATE_MACHINE_NAME = "player1_drinking";
+  const INPUT_NAME = "Click";
+
+  const { rive, RiveComponent: RiveComponentTouch } = useRive({
+    src: Player1,
+    stateMachines: STATE_MACHINE_NAME,
+    artboard: "Player1_drinking",
+    autoplay: true,
+  });
+
+  const pressedInput = useStateMachineInput(
+    rive,
+    STATE_MACHINE_NAME,
+    INPUT_NAME
+  );
 
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kilaza * r)) * 1000);
@@ -101,6 +121,10 @@ const GamePage = ({ socket }) => {
             id="character"
             className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
           >
+            <RiveComponentTouch
+              className="absolute h-[50vh] w-[70vw]"
+              onClick={() => pressedInput.fire()}
+            />{" "}
             {showImage ? (
               <img src={pije} alt="pije" />
             ) : (
