@@ -15,9 +15,6 @@ const HomePage = ({ socket }) => {
   const [showForm, setShowForm] = useState(false);
   const [gameCreator, setGameCreator] = useState(false);
 
-  const STATE_MACHINE_NAME = "Cheers";
-  const TOGGLE_NAME = "Toggle";
-
   return (
     <>
       <div
@@ -54,7 +51,6 @@ const HomePage = ({ socket }) => {
         </div>
         <div className="flex flex-col items-center">
           <Rive src={Cheers} className="h-[50vh] w-[70vw]" />{" "}
-          <Rive src={Test} className="absolute h-[50vh] w-[70vw]" />{" "}
           <div
             className={`
             -mt-12 h-[170px] min-w-[300px] w-[25vw] flex flex-col justify-center items-center
