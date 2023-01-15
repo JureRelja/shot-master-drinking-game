@@ -1,7 +1,6 @@
 import React from "react";
 
 const Player = ({ igraci }) => {
-  console.log("igraci", igraci);
   return (
     <>
       <div className="absolute grid place-item-center">

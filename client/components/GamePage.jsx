@@ -23,6 +23,9 @@ const GamePage = ({ socket }) => {
   const [ukupniBAC, setUkupniBAC] = useState(0);
 
   const [brojPica, setBrojPica] = useState(0);
+  const [bodovi, setBodovi] = useState(0);
+
+  const [brojRundi, setBrojRundi] = useState(0);
 
   const [igraci, setIgraci] = useState([]);
 
@@ -45,16 +48,19 @@ const GamePage = ({ socket }) => {
     INPUT_NAME
   );
 
+  //Igrač pije
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kilaza * r)) * 1000);
     socket.emit("ShootEvent", "ShootEvent");
     setBrojPica(brojPica + 1);
   };
 
+  //Pokretanje igre
   const startGameEvent = () => {
-    socket.emit("startGame", roomID);
+    socket.emit("pokreniIgru", roomID);
   };
 
+  //Aktvini igrači u sobi
   useEffect(() => {
     socket.on("igraciUSobi", (e) => {
       setIgraci(e);
@@ -72,13 +78,15 @@ const GamePage = ({ socket }) => {
     });
   }, []);
 
+  //Ciljani BAC koji igrači trebaju postići
   useEffect(() => {
-    socket.on("BacTarget", (e) => {
+    socket.on("igraPocela", (e) => {
       setCiljaniBAC(e);
       setI(i + 1);
+      setShowButton("block");
     });
 
-    if (i != 0 && preostaloVrijeme >= 0) {
+    if (i % 2 == 1 && preostaloVrijeme >= 0) {
       let setTimer = setInterval(() => {
         if (ukupniBAC - (1 / 120) * 0.15 <= 0) {
           setUkupniBAC(0);
@@ -88,17 +96,39 @@ const GamePage = ({ socket }) => {
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
         if (preostaloVrijeme <= 0.1) {
-          socket.emit("gameEnded", {
-            userName: userName,
-            BAC: ukupniBAC,
-          });
-          alert("Kraj igre");
+          setBodovi(
+            bodovi + brojPica * (0.1 / Math.abs(ukupniBAC - ciljaniBAC))
+          );
+          new Promise((resolve, reject) => {
+            socket.emit("rundaGotova", {
+              roomID,
+              bodovi,
+            });
+            resolve();
+          }).then(() => {});
+
+          if (brojRundi == 3) {
+            if (gameCreator) {
+              socket.emit("krajIgre", roomID);
+            }
+            alert("Kraj igre");
+          } else {
+            alert("Kraj runde");
+            console.log(bodovi);
+            setPreostaloVrijeme(60);
+            setVrijemeUSekundama(60);
+            setUkupniBAC(0);
+            setBrojPica(0);
+            setI(i + 1);
+            setBrojRundi(brojRundi + 1);
+            setShowButton("hidden");
+          }
         }
-      }, 100);
+      }, 10);
 
       return () => clearInterval(setTimer);
     }
-  }, []);
+  });
 
   useEffect(() => {
     if (showImage) {
@@ -120,10 +150,10 @@ const GamePage = ({ socket }) => {
             id="character"
             className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
           >
-            <RiveComponentTouch
+            {/* <RiveComponentTouch
               className="absolute h-[50vh] w-[70vw]"
               onClick={() => pressedInput.fire()}
-            />{" "}
+            />{" "} */}
             {showImage ? (
               <img src={pije} alt="pije" />
             ) : (
@@ -148,16 +178,26 @@ const GamePage = ({ socket }) => {
           <span className="">Broj popijenih pića: {brojPica}</span>
 
           <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
-          {gameCreator ? (
+          {gameCreator && i == 0 && brojRundi != 3 ? (
             <Button
               color="green"
               onClick={() => {
-                setShowButton("block");
                 startGameEvent();
               }}
               className=""
             >
               Pokreni Igru
+            </Button>
+          ) : null}
+          {gameCreator && i != 0 && i % 2 == 0 && brojRundi != 3 ? (
+            <Button
+              color="green"
+              onClick={() => {
+                startGameEvent();
+              }}
+              className=""
+            >
+              Pokreni sljedeću rundu
             </Button>
           ) : null}
         </div>

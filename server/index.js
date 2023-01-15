@@ -17,10 +17,24 @@ function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
 
+//Insertion sort - traženje pobjednika
+function pobjednik(pojedinacnaSobaIgraca) {
+  pojedinacnaSobaIgraca.forEach((igrac) => {
+    let index = pojedinacnaSobaIgraca.indexOf(igrac)
+    let tempIgrac = pojedinacnaSobaIgraca[index - 1]
+    while (igrac.bodovi < pojedinacnaSobaIgraca[index - 1].bodovi) {
+      pojedinacnaSobaIgraca[index - 1] = igrac;
+      pojedinacnaSobaIgraca[index] = tempIgrac;
+    }
+  }
+  )
+}
+
 let sveSobeIgraca = [];
 
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
+  console.log(sveSobeIgraca);
 
   socket.on("userDataLogin", (igrac) => {
     
@@ -56,17 +70,38 @@ socketIO.on("connection", (socket) => {
     })
   })
    
-  //Kada igrač klikne na start igre, počinje igra
-  socket.on("startGame", (roomID) => {
+  //Kada igrač klikne na pokreni igru
+  socket.on("pokreniIgru", (roomID) => {
     let BacTarget = getRandomArbitrary(2, 3);
-    socketIO.to(roomID).emit("BacTarget", Math.round(BacTarget * 100) / 100);
+    socketIO.to(roomID).emit("igraPocela", Math.round(BacTarget * 100) / 100);
+  });
+
+  //Kraj runde
+  socketIO.on("rundaGotova", (bodoviIgraca) => {
+    console.log(bodoviIgraca);
+    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+      if (roomID == pojedinacnaSobaIgraca[0].roomID) {
+        pojedinacnaSobaIgraca.forEach((igrac) => {
+          if (igrac.roomID == bodoviIgraca.roomID) {
+            igrac.bodovi = bodoviIgraca.bodovi;
+            console.log(igrac.bodovi);
+            console.log(bodoviIgraca.bodovi);
+          }
+        })
+      }
+    })
   });
 
   //Kraj igre
-  socketIO.on("gameEnded", (e) => {
-    console.log("Pobjednik je", e.userName);
-    console.log("BAC", e.BAC);
-  });
+  socketIO.on("krajIgre", (roomID) => {
+    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+      if (roomID == pojedinacnaSobaIgraca[0].roomID) {
+        let pobjednik = pobjednik(pojedinacnaSobaIgraca);
+        socketIO.to(roomID).emit("pobjednik", pobjednik);
+        console.log(pobjednik);
+      }
+    })
+  })
 
   //Kada igrač klikne na Šotiraj
   socketIO.on("ShootEvent", (e) => {
@@ -89,12 +124,15 @@ socketIO.on("connection", (socket) => {
             let tempSoba = pojedinacnaSobaIgraca.filter((igrac) => igrac.socketID !== socket.id)
             
             //Postavlja stvarnu listu igrača u sobi da je jednaka privremenoj sobi
-            for (let i = 0; i < tempSoba.length; i++) {
+            if (tempSoba.length == 0) {
+              sveSobeIgraca.splice(index, 1)
+            }  
+            else {
+              for (let i = 0; i < tempSoba.length; i++) {
                 pojedinacnaSobaIgraca[i] = tempSoba[i]
-                if (tempSoba.length == 0) {
-                  sveSobeIgraca.splice(index, 1)
-                }  
+              }
             }
+            
             pojedinacnaSobaIgraca.pop()
             //Šalje novu listu igrača svim igračima u sobi
             socketIO.to(igrac.roomID).emit('igraciUSobi', pojedinacnaSobaIgraca);
