@@ -55,7 +55,7 @@ const GamePage = ({ socket }) => {
 
   useEffect(() => {
     socket.on("BacTarget", (e) => {
-      setCiljaniBAC(Math.round(e * 100) / 100);
+      setCiljaniBAC(e);
       setI(i + 1);
     });
 
