@@ -57,7 +57,16 @@ const GamePage = ({ socket }) => {
   };
 
   useEffect(() => {
-    socket.on("ConnectedToRoomResponse", (e) => {
+    socket.on("igraciUSobi", (e) => {
+      setIgraci(e);
+      console.log(e);
+      console.log("test");
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    socket.emit("fetchIgraceUSobi", roomID);
+    socket.on("igraciUSobi", (e) => {
       setIgraci(e);
       console.log(e);
       console.log("test");
@@ -66,7 +75,7 @@ const GamePage = ({ socket }) => {
 
   useEffect(() => {
     socket.on("BacTarget", (e) => {
-      setCiljaniBAC(Math.round(e * 100) / 100);
+      setCiljaniBAC(e);
       setI(i + 1);
     });
 
@@ -90,7 +99,7 @@ const GamePage = ({ socket }) => {
 
       return () => clearInterval(setTimer);
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (showImage) {
@@ -153,16 +162,6 @@ const GamePage = ({ socket }) => {
             </Button>
           ) : null}
         </div>
-        <Button
-          color="green"
-          onClick={() => {
-            setCounter(counter + 1);
-          }}
-          className=""
-        >
-          tigger
-        </Button>
-        <span>broj: {counter}</span>
         <Player igraci={igraci} />
         <div
           id="second_player"
