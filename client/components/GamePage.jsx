@@ -25,7 +25,6 @@ const GamePage = ({ socket }) => {
   const [brojPica, setBrojPica] = useState(0);
 
   const [igraci, setIgraci] = useState([]);
-  const [counter, setCounter] = useState(0);
 
   const getUserInfo = useSelector((state) => state.getUserInfo);
   const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
