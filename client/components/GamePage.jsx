@@ -4,7 +4,8 @@ import odmara from "../assets/odmara.svg";
 import pije from "../assets/pije.svg";
 import { useSelector } from "react-redux";
 import Player from "./Player";
-import Player1 from "../assets/player1.riv";
+import Player1Riv from "../assets/player1.riv";
+import Player2Riv from "../assets/player2.riv";
 
 import Rive from "@rive-app/react-canvas";
 import { useRive, useStateMachineInput } from "@rive-app/react-canvas";
@@ -33,21 +34,27 @@ const GamePage = ({ socket }) => {
   const getUserInfo = useSelector((state) => state.getUserInfo);
   const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
 
-  const STATE_MACHINE_NAME = "player1_drinking";
+  const PLAYER1_STATE = "player1_drinking";
+  const PLAYER2_STATE = "player2_drinking";
   const INPUT_NAME = "Click";
 
-  const { rive, RiveComponent: RiveComponentTouch } = useRive({
-    src: Player1,
-    stateMachines: STATE_MACHINE_NAME,
+  const { rive, RiveComponent: Player1 } = useRive({
+    src: Player1Riv,
+    stateMachines: PLAYER1_STATE,
     artboard: "Player1_drinking",
     autoplay: true,
   });
 
-  const pressedInput = useStateMachineInput(
-    rive,
-    STATE_MACHINE_NAME,
-    INPUT_NAME
-  );
+  const { RiveComponent: Player2 } = useRive({
+    src: Player2Riv,
+    stateMachines: PLAYER2_STATE,
+    artboard: "Player2_drinking",
+    autoplay: true,
+  });
+
+  const player1Drink = useStateMachineInput(rive, PLAYER1_STATE, INPUT_NAME);
+
+  const player2Drink = useStateMachineInput(rive, PLAYER2_STATE, INPUT_NAME);
 
   //Igrač pije
   const shootEvent = () => {
@@ -150,15 +157,14 @@ const GamePage = ({ socket }) => {
             id="character"
             className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
           >
-            {/* <RiveComponentTouch
-              className="absolute h-[50vh] w-[70vw]"
-              onClick={() => pressedInput.fire()}
-            />{" "} */}
-            {showImage ? (
-              <img src={pije} alt="pije" />
-            ) : (
-              <img src={odmara} alt="odmara" />
-            )}
+            <Player1
+              className="w-[100%] h-[100%]"
+              onClick={() => player1Drink.fire()}
+            />
+            <Player2
+              className="w-[100%] h-[100%]"
+              onClick={() => player2Drink.fire()}
+            />
           </div>
           <Button
             className={`h-[40px] bg-red-900 ${showButton}`}
