@@ -47,8 +47,8 @@ socketIO.on("connection", (socket) => {
 
       //Dodaje igrača u listu igrača
       sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-        if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {   
-          pojedinacnaSobaIgraca.push(igrac)
+        if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
+          pojedinacnaSobaIgraca.push(igrac);
           postojiSoba = true;
         }
       })
@@ -65,7 +65,7 @@ socketIO.on("connection", (socket) => {
   socket.on("fetchIgraceUSobi", (roomID) => {
     sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
       if (roomID == pojedinacnaSobaIgraca[0].roomID) {
-        socketIO.to(roomID).emit('igraciUSobi', pojedinacnaSobaIgraca);
+        socketIO.to(roomID).emit("igraciUSobi", pojedinacnaSobaIgraca);
       }
     })
   })
@@ -74,6 +74,7 @@ socketIO.on("connection", (socket) => {
   socket.on("pokreniIgru", (roomID) => {
     let BacTarget = getRandomArbitrary(2, 3);
     socketIO.to(roomID).emit("igraPocela", Math.round(BacTarget * 100) / 100);
+    console.log("igra počela")
   });
 
   //Kraj runde
@@ -86,6 +87,7 @@ socketIO.on("connection", (socket) => {
             igrac.bodovi = bodoviIgraca.bodovi;
             console.log(igrac.bodovi);
             console.log(bodoviIgraca.bodovi);
+            console.log("runda gotova")
           }
         })
       }
@@ -99,6 +101,7 @@ socketIO.on("connection", (socket) => {
         let pobjednik = pobjednik(pojedinacnaSobaIgraca);
         socketIO.to(roomID).emit("pobjednik", pobjednik);
         console.log(pobjednik);
+        console.log("kraj igre")
       }
     })
   })
@@ -119,10 +122,12 @@ socketIO.on("connection", (socket) => {
         pojedinacnaSobaIgraca.forEach((igrac) => {
           if (igrac.socketID == socket.id) {
             //Sprema index sobe iz koje se igrač odspojio
-            let index = sveSobeIgraca.indexOf(pojedinacnaSobaIgraca)
+            let index = sveSobeIgraca.indexOf(pojedinacnaSobaIgraca);
             //Stvara privremenu sobu bez igrača koji se odspojio
-            let tempSoba = pojedinacnaSobaIgraca.filter((igrac) => igrac.socketID !== socket.id)
-            
+            let tempSoba = pojedinacnaSobaIgraca.filter(
+              (igrac) => igrac.socketID !== socket.id
+            );
+
             //Postavlja stvarnu listu igrača u sobi da je jednaka privremenoj sobi
             if (tempSoba.length == 0) {
               sveSobeIgraca.splice(index, 1)
@@ -135,7 +140,7 @@ socketIO.on("connection", (socket) => {
             
             pojedinacnaSobaIgraca.pop()
             //Šalje novu listu igrača svim igračima u sobi
-            socketIO.to(igrac.roomID).emit('igraciUSobi', pojedinacnaSobaIgraca);
+            socketIO.to(igrac.roomID).emit("igraciUSobi", pojedinacnaSobaIgraca);
           }
         })   
       })

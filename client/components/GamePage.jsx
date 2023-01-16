@@ -24,6 +24,7 @@ const GamePage = ({ socket }) => {
 
   const [brojPica, setBrojPica] = useState(0);
   const [bodovi, setBodovi] = useState(0);
+  let bod = 0;
 
   const [brojRundi, setBrojRundi] = useState(0);
 
@@ -64,8 +65,6 @@ const GamePage = ({ socket }) => {
   useEffect(() => {
     socket.on("igraciUSobi", (e) => {
       setIgraci(e);
-      console.log(e);
-      console.log("test");
     });
   }, [socket]);
 
@@ -73,10 +72,37 @@ const GamePage = ({ socket }) => {
     socket.emit("fetchIgraceUSobi", roomID);
     socket.on("igraciUSobi", (e) => {
       setIgraci(e);
-      console.log(e);
-      console.log("test");
     });
   }, []);
+
+  //Kraj igre/runde
+  function krajIgre() {
+    socket.emit("rundaGotova", {
+      roomID,
+      bodovi,
+    });
+    let bod = bodovi + brojPica * (0.1 / Math.abs(ukupniBAC - ciljaniBAC));
+
+    setBodovi(bodovi + brojPica * (0.1 / Math.abs(ukupniBAC - ciljaniBAC)));
+    console.log("bod", bod);
+
+    if (brojRundi == 3) {
+      if (gameCreator) {
+        socket.emit("krajIgre", roomID);
+      }
+      alert("Kraj igre");
+    } else {
+      alert("Kraj runde");
+      console.log(bodovi);
+      setPreostaloVrijeme(60);
+      setVrijemeUSekundama(60);
+      setUkupniBAC(0);
+      setBrojPica(0);
+      setI(i + 1);
+      setBrojRundi(brojRundi + 1);
+      setShowButton("hidden");
+    }
+  }
 
   //Ciljani BAC koji igrači trebaju postići
   useEffect(() => {
@@ -96,33 +122,7 @@ const GamePage = ({ socket }) => {
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
         if (preostaloVrijeme <= 0.1) {
-          setBodovi(
-            bodovi + brojPica * (0.1 / Math.abs(ukupniBAC - ciljaniBAC))
-          );
-          new Promise((resolve, reject) => {
-            socket.emit("rundaGotova", {
-              roomID,
-              bodovi,
-            });
-            resolve();
-          }).then(() => {});
-
-          if (brojRundi == 3) {
-            if (gameCreator) {
-              socket.emit("krajIgre", roomID);
-            }
-            alert("Kraj igre");
-          } else {
-            alert("Kraj runde");
-            console.log(bodovi);
-            setPreostaloVrijeme(60);
-            setVrijemeUSekundama(60);
-            setUkupniBAC(0);
-            setBrojPica(0);
-            setI(i + 1);
-            setBrojRundi(brojRundi + 1);
-            setShowButton("hidden");
-          }
+          krajIgre();
         }
       }, 10);
 
