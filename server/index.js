@@ -18,23 +18,26 @@ function getRandomArbitrary(min, max) {
 }
 
 //Insertion sort - traženje pobjednika
-function pobjednik(pojedinacnaSobaIgraca) {
+function nalazakPobjednika(pojedinacnaSobaIgraca) {
   pojedinacnaSobaIgraca.forEach((igrac) => {
     let index = pojedinacnaSobaIgraca.indexOf(igrac)
     let tempIgrac = pojedinacnaSobaIgraca[index - 1]
-    while (igrac.bodovi < pojedinacnaSobaIgraca[index - 1].bodovi) {
+    if (index == 0) {
+      return pojedinacnaSobaIgraca;
+    }
+    while (igrac.bodovi > pojedinacnaSobaIgraca[index - 1].bodovi) {
       pojedinacnaSobaIgraca[index - 1] = igrac;
       pojedinacnaSobaIgraca[index] = tempIgrac;
     }
   }
   )
+  return pojedinacnaSobaIgraca;
 }
 
 let sveSobeIgraca = [];
 
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
-  console.log(sveSobeIgraca);
 
   socket.on("userDataLogin", (igrac) => {
     
@@ -78,15 +81,12 @@ socketIO.on("connection", (socket) => {
   });
 
   //Kraj runde
-  socketIO.on("rundaGotova", (bodoviIgraca) => {
-    console.log(bodoviIgraca);
+  socket.on("rundaGotova", (bodoviIgraca) => {
     sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-      if (roomID == pojedinacnaSobaIgraca[0].roomID) {
+      if (bodoviIgraca.roomID == pojedinacnaSobaIgraca[0].roomID) {
         pojedinacnaSobaIgraca.forEach((igrac) => {
           if (igrac.roomID == bodoviIgraca.roomID) {
             igrac.bodovi = bodoviIgraca.bodovi;
-            console.log(igrac.bodovi);
-            console.log(bodoviIgraca.bodovi);
             console.log("runda gotova")
           }
         })
@@ -95,13 +95,13 @@ socketIO.on("connection", (socket) => {
   });
 
   //Kraj igre
-  socketIO.on("krajIgre", (roomID) => {
+  socket.on("krajIgre", (roomID) => {
     sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
       if (roomID == pojedinacnaSobaIgraca[0].roomID) {
-        let pobjednik = pobjednik(pojedinacnaSobaIgraca);
-        socketIO.to(roomID).emit("pobjednik", pobjednik);
-        console.log(pobjednik);
-        console.log("kraj igre")
+        let pobjednik = nalazakPobjednika(pojedinacnaSobaIgraca);
+        socketIO.to(roomID).emit("pobjednik", pobjednik[0]);
+        console.log(pobjednik[0]);
+
       }
     })
   })

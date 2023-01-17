@@ -7,7 +7,6 @@ import Player from "./Player";
 import Player1Riv from "../assets/player1.riv";
 import Player2Riv from "../assets/player2.riv";
 
-import Rive from "@rive-app/react-canvas";
 import { useRive, useStateMachineInput } from "@rive-app/react-canvas";
 
 const GamePage = ({ socket }) => {
@@ -25,7 +24,6 @@ const GamePage = ({ socket }) => {
 
   const [brojPica, setBrojPica] = useState(0);
   const [bodovi, setBodovi] = useState(0);
-  let bod = 0;
 
   const [brojRundi, setBrojRundi] = useState(0);
 
@@ -84,23 +82,18 @@ const GamePage = ({ socket }) => {
 
   //Kraj igre/runde
   function krajIgre() {
-    socket.emit("rundaGotova", {
-      roomID,
-      bodovi,
-    });
-    let bod = bodovi + brojPica * (0.1 / Math.abs(ukupniBAC - ciljaniBAC));
-
-    setBodovi(bodovi + brojPica * (0.1 / Math.abs(ukupniBAC - ciljaniBAC)));
-    console.log("bod", bod);
-
-    if (brojRundi == 3) {
+    setBodovi(
+      bodovi +
+        brojPica * Math.round((0.1 / Math.abs(ukupniBAC - ciljaniBAC)) * 10)
+    );
+    console.log(bodovi);
+    if (brojRundi == 2) {
       if (gameCreator) {
         socket.emit("krajIgre", roomID);
       }
       alert("Kraj igre");
     } else {
       alert("Kraj runde");
-      console.log(bodovi);
       setPreostaloVrijeme(60);
       setVrijemeUSekundama(60);
       setUkupniBAC(0);
@@ -129,7 +122,15 @@ const GamePage = ({ socket }) => {
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
         if (preostaloVrijeme <= 0.1) {
-          krajIgre();
+          new Promise((resolve, reject) => {
+            krajIgre();
+            resolve();
+          }).then(() => {
+            socket.emit("rundaGotova", {
+              roomID,
+              bodovi,
+            });
+          });
         }
       }, 10);
 
@@ -137,45 +138,22 @@ const GamePage = ({ socket }) => {
     }
   });
 
-  useEffect(() => {
-    if (showImage) {
-      const timeoutId = setTimeout(() => {
-        setShowImage(false);
-      }, 300);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [showImage]);
-
   return (
     <>
       <div className={`flex h-[100vh] w-[100vw] justify-center`}>
-        <div
-          id="first_player"
-          className="flex flex-col justify-center w-[30%] border-red-200"
+        <Button
+          className={`h-[40px] bg-red-900 ${showButton}`}
+          onClick={() => {
+            shootEvent();
+            player1Drink.fire();
+            if (player2Drink) {
+              player2Drink.fire();
+            }
+          }}
         >
-          <div
-            id="character"
-            className="relative inline-flex items-center justify-center w-[250px] h-[250px]"
-          >
-            <Player1
-              className="w-[100%] h-[100%]"
-              onClick={() => player1Drink.fire()}
-            />
-            <Player2
-              className="w-[100%] h-[100%]"
-              onClick={() => player2Drink.fire()}
-            />
-          </div>
-          <Button
-            className={`h-[40px] bg-red-900 ${showButton}`}
-            onClick={() => {
-              shootEvent();
-              setShowImage(true);
-            }}
-          >
-            Šotiraj
-          </Button>
-        </div>
+          Šotiraj
+        </Button>
+        <span>{bodovi}</span>
         <div className="flex flex-col justify-evenly">
           <div id="timer">
             <span className="">Timer: {vrijemeUSekundama}</span>
@@ -184,13 +162,18 @@ const GamePage = ({ socket }) => {
           <span className="">Broj popijenih pića: {brojPica}</span>
 
           <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
+          <Player
+            igraci={igraci}
+            Player1={Player1}
+            Player2={Player2}
+            className={`h-[200px]`}
+          />
           {gameCreator && i == 0 && brojRundi != 3 ? (
             <Button
               color="green"
               onClick={() => {
                 startGameEvent();
               }}
-              className=""
             >
               Pokreni Igru
             </Button>
@@ -201,20 +184,10 @@ const GamePage = ({ socket }) => {
               onClick={() => {
                 startGameEvent();
               }}
-              className=""
             >
               Pokreni sljedeću rundu
             </Button>
           ) : null}
-        </div>
-        <Player igraci={igraci} />
-        <div
-          id="second_player"
-          className="flex flex-col justify-center w-[30%]"
-        >
-          <img src={odmara} alt="odmara" className="w-[250px]" />
-          <img src={pije} alt="pije" className="w-[250px]" />
-          <span>Oponent Took a Shoot</span>
         </div>
       </div>
     </>
