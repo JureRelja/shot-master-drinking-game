@@ -14,7 +14,6 @@ const GamePage = ({ socket }) => {
 
   const [i, setI] = useState(0); //Ako je i=1, igra počinje
   const [showButton, setShowButton] = useState("hidden");
-  const [showImage, setShowImage] = useState(false);
   //Preostalo vrijeme igre
   const [preostaloVrijeme, setPreostaloVrijeme] = useState(60);
   const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60);
@@ -118,10 +117,10 @@ const GamePage = ({ socket }) => {
 
         setShowButton("hidden");
         setBrojRundi(brojRundi + 1);
-        socket.on("pobjednik", (e) => {
-          alert("Kraj igre, Pobjednik je " + e.userName);
-        });
       }
+      socket.on("pobjednik", (e) => {
+        alert("Kraj igre, Pobjednik je " + e.userName);
+      });
     } else {
       setPreostaloVrijeme(60);
       setVrijemeUSekundama(60);
@@ -179,9 +178,10 @@ const GamePage = ({ socket }) => {
             className={`h-[40px] bg-red-900 ${showButton}`}
             onClick={() => {
               shootEvent();
-              player1Drink.fire();
-              if (player2Drink) {
+              if (gameCreator) {
                 player2Drink.fire();
+              } else {
+                player1Drink.fire();
               }
             }}
           >

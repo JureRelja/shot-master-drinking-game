@@ -8,12 +8,12 @@ const Player = ({ igraci, Player1, Player2 }) => {
           igraci.indexOf(igrac) == 0 ? (
             <div key={igrac.socketID}>
               <span>Username: {igrac.userName}</span>
-              <Player1 />
+              <Player2 className="h-[350px] w-[350px]" />
             </div>
           ) : (
             <div key={igrac.socketID}>
+              <Player1 className="h-[350px] w-[350px]" />
               <span>Username: {igrac.userName}</span>
-              <Player2 />
             </div>
           )
         )}
