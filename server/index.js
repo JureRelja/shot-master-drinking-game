@@ -86,7 +86,7 @@ socketIO.on("connection", (socket) => {
       if (bodoviIgraca.roomID == pojedinacnaSobaIgraca[0].roomID) {
         pojedinacnaSobaIgraca.forEach((igrac) => {
           if (igrac.roomID == bodoviIgraca.roomID) {
-            igrac.bodovi = bodoviIgraca.bodovi;
+            igrac.bodovi += bodoviIgraca.noviBodovi;
             console.log("runda gotova")
           }
         })

@@ -40,6 +40,7 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
         socketID: socket.id,
         gameCreator,
         roomID,
+        bodovi: 0,
       });
 
       socket.on("BrojIgracaUSobi", (brIgracaUSobi) => {

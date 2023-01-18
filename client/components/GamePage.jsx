@@ -26,6 +26,7 @@ const GamePage = ({ socket }) => {
   const [bodovi, setBodovi] = useState(0);
 
   const [brojRundi, setBrojRundi] = useState(0);
+  let noviBodovi = 0;
 
   const [igraci, setIgraci] = useState([]);
 
@@ -73,6 +74,8 @@ const GamePage = ({ socket }) => {
     });
   }, [socket]);
 
+  //Ažuriranje bodova igrača
+
   useEffect(() => {
     socket.emit("fetchIgraceUSobi", roomID);
     socket.on("igraciUSobi", (e) => {
@@ -80,20 +83,46 @@ const GamePage = ({ socket }) => {
     });
   }, []);
 
+  useEffect(() => {
+    socket.emit("fetchIgraceUSobi", roomID);
+    socket.on("igraciUSobi", (e) => {
+      setIgraci(e);
+    });
+  }, [brojRundi]);
+
   //Kraj igre/runde
   function krajIgre() {
-    setBodovi(
-      bodovi +
-        brojPica * Math.round((0.1 / Math.abs(ukupniBAC - ciljaniBAC)) * 10)
+    let zaokruzeniBAC = Math.round(ukupniBAC * 100) / 100;
+    if (Math.abs(zaokruzeniBAC - ciljaniBAC) <= 0.1) {
+      noviBodovi = brojPica * 10;
+    } else {
+      noviBodovi = Math.round(
+        brojPica * ((0.1 / Math.abs(zaokruzeniBAC - ciljaniBAC)) * 10)
+      );
+    }
+
+    console.log(
+      "1",
+      Math.round(brojPica * ((0.1 / Math.abs(zaokruzeniBAC - ciljaniBAC)) * 10))
     );
-    console.log(bodovi);
+    setBodovi(bodovi + noviBodovi);
+    socket.emit("rundaGotova", {
+      roomID,
+      noviBodovi,
+    });
+    console.log("2", ukupniBAC);
+    console.log(noviBodovi);
     if (brojRundi == 2) {
       if (gameCreator) {
         socket.emit("krajIgre", roomID);
+
+        setShowButton("hidden");
+        setBrojRundi(brojRundi + 1);
+        socket.on("pobjednik", (e) => {
+          alert("Kraj igre, Pobjednik je " + e.userName);
+        });
       }
-      alert("Kraj igre");
     } else {
-      alert("Kraj runde");
       setPreostaloVrijeme(60);
       setVrijemeUSekundama(60);
       setUkupniBAC(0);
@@ -101,6 +130,7 @@ const GamePage = ({ socket }) => {
       setI(i + 1);
       setBrojRundi(brojRundi + 1);
       setShowButton("hidden");
+      alert("Kraj runde");
     }
   }
 
@@ -122,15 +152,7 @@ const GamePage = ({ socket }) => {
         setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
         setPreostaloVrijeme(preostaloVrijeme - 0.1);
         if (preostaloVrijeme <= 0.1) {
-          new Promise((resolve, reject) => {
-            krajIgre();
-            resolve();
-          }).then(() => {
-            socket.emit("rundaGotova", {
-              roomID,
-              bodovi,
-            });
-          });
+          krajIgre();
         }
       }, 10);
 
@@ -141,33 +163,30 @@ const GamePage = ({ socket }) => {
   return (
     <>
       <div className={`flex h-[100vh] w-[100vw] justify-center`}>
-        <Button
-          className={`h-[40px] bg-red-900 ${showButton}`}
-          onClick={() => {
-            shootEvent();
-            player1Drink.fire();
-            if (player2Drink) {
-              player2Drink.fire();
-            }
-          }}
-        >
-          Šotiraj
-        </Button>
-        <span>{bodovi}</span>
         <div className="flex flex-col justify-evenly">
           <div id="timer">
-            <span className="">Timer: {vrijemeUSekundama}</span>
+            <span>Timer: {vrijemeUSekundama}</span>
           </div>
 
-          <span className="">Broj popijenih pića: {brojPica}</span>
+          <span>Broj popijenih pića: {brojPica}</span>
 
           <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
-          <Player
-            igraci={igraci}
-            Player1={Player1}
-            Player2={Player2}
-            className={`h-[200px]`}
-          />
+          <span>
+            <b>{bodovi}</b>
+          </span>
+          <Player igraci={igraci} Player1={Player1} Player2={Player2} />
+          <Button
+            className={`h-[40px] bg-red-900 ${showButton}`}
+            onClick={() => {
+              shootEvent();
+              player1Drink.fire();
+              if (player2Drink) {
+                player2Drink.fire();
+              }
+            }}
+          >
+            Šotiraj
+          </Button>
           {gameCreator && i == 0 && brojRundi != 3 ? (
             <Button
               color="green"
