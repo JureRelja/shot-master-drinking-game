@@ -16,21 +16,21 @@ const Test = (props) => {
   const PLAYER2_STATE = "player2_drinking";
   const INPUT_NAME = "Click";
 
-  const { rive, RiveComponent: Player1 } = useRive({
+  const { rive: test, RiveComponent: Player1 } = useRive({
     src: Player1Riv,
     stateMachines: PLAYER1_STATE,
     artboard: "Player1_drinking",
     autoplay: true,
   });
 
-  const { RiveComponent: Player2 } = useRive({
+  const { rive, RiveComponent: Player2 } = useRive({
     src: Player2Riv,
     stateMachines: PLAYER2_STATE,
     artboard: "Player2_drinking",
     autoplay: true,
   });
 
-  const player1Drink = useStateMachineInput(rive, PLAYER1_STATE, INPUT_NAME);
+  const player1Drink = useStateMachineInput(test, PLAYER1_STATE, INPUT_NAME);
 
   const player2Drink = useStateMachineInput(rive, PLAYER2_STATE, INPUT_NAME);
 
@@ -48,6 +48,13 @@ const Test = (props) => {
         >
           Player1 UserInfo: {userName} {r} {kilaza} {gameCreator} {roomID}
           <Player1 />
+          <button
+            onClick={() => {
+              player1Drink.fire();
+            }}
+          >
+            Drink
+          </button>
         </div>
         <div
           className="
