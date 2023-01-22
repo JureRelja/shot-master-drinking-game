@@ -43,7 +43,7 @@ const GamePage = ({ socket }) => {
     autoplay: true,
   });
 
-  const { RiveComponent: Player2 } = useRive({
+  const { rive: rive2, RiveComponent: Player2 } = useRive({
     src: Player2Riv,
     stateMachines: PLAYER2_STATE,
     artboard: "Player2_drinking",
@@ -52,7 +52,7 @@ const GamePage = ({ socket }) => {
 
   const player1Drink = useStateMachineInput(rive, PLAYER1_STATE, INPUT_NAME);
 
-  const player2Drink = useStateMachineInput(rive, PLAYER2_STATE, INPUT_NAME);
+  const player2Drink = useStateMachineInput(rive2, PLAYER2_STATE, INPUT_NAME);
 
   //Igrač pije
   const shootEvent = () => {

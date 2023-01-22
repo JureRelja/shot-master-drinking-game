@@ -20,21 +20,21 @@ const Test = (props) => {
   const PLAYER2_STATE = "player2_drinking";
   const INPUT_NAME = "Click";
 
-  const { rive, RiveComponent: Player1 } = useRive({
+  const { rive: test, RiveComponent: Player1 } = useRive({
     src: Player1Riv,
     stateMachines: PLAYER1_STATE,
     artboard: "Player1_drinking",
     autoplay: true,
   });
 
-  const { RiveComponent: Player2 } = useRive({
+  const { rive, RiveComponent: Player2 } = useRive({
     src: Player2Riv,
     stateMachines: PLAYER2_STATE,
     artboard: "Player2_drinking",
     autoplay: true,
   });
 
-  const player1Drink = useStateMachineInput(rive, PLAYER1_STATE, INPUT_NAME);
+  const player1Drink = useStateMachineInput(test, PLAYER1_STATE, INPUT_NAME);
 
   const player2Drink = useStateMachineInput(rive, PLAYER2_STATE, INPUT_NAME);
 
@@ -51,7 +51,9 @@ const Test = (props) => {
           border-black border-2 shadow-[-5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
           "
         >
-          <Player1 />
+          <div className="w-[100%] h-[100%] pt-7">
+            <Player1 />
+          </div>
         </div>
         <div
           className="
@@ -70,14 +72,16 @@ const Test = (props) => {
           grid place-items-center
           border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
         >
-          <Player2 />
+          <div className="w-[100%] h-[100%] pt-7">
+            <Player2 />
+          </div>
         </div>
         <div className="col-start-3 col-span-2 row-start-4 grid place-items-center">
           <button className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white">
             Start Game
           </button>
           <Button
-            className={`h-[40px] bg-red-900 py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white`}
+            className={`h-[40px] py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white`}
             onClick={() => {
               player1Drink.fire();
 
