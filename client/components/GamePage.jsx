@@ -161,8 +161,8 @@ const GamePage = ({ socket }) => {
 
   return (
     <>
-      <div className={`flex h-[100vh] w-[100vw] justify-center`}>
-        <div className="flex flex-col justify-evenly">
+      <div className={`flex h-[100vh] w-[100vw] flex-col justify-center`}>
+        <div className={`grid grid-cols-${igraci.length}`}>
           <div id="timer">
             <span>Timer: {vrijemeUSekundama}</span>
           </div>
