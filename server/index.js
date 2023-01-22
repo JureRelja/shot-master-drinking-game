@@ -107,8 +107,13 @@ socketIO.on("connection", (socket) => {
   })
 
   //Kada igrač klikne na Šotiraj
-  socketIO.on("ShootEvent", (e) => {
-    socketIO.emit("newUserResponse", users);
+  socket.on("ShootEvent", (e) => {
+    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
+      if (e.roomID == pojedinacnaSobaIgraca[0].roomID) {
+        socketIO.to(e.roomID).emit("DigniCasu", e.gameCreator);
+        console.log("Šotiraj")
+      }
+    })
   });
 
   //Odspajanje igrača

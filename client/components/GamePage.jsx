@@ -27,6 +27,8 @@ const GamePage = ({ socket }) => {
   const [brojRundi, setBrojRundi] = useState(0);
   let noviBodovi = 0;
 
+  const [diziCasu1, setDiziCasu1] = useState(false);
+  const [diziCasu2, setDiziCasu2] = useState(false);
   const [igraci, setIgraci] = useState([]);
 
   const getUserInfo = useSelector((state) => state.getUserInfo);
@@ -51,13 +53,12 @@ const GamePage = ({ socket }) => {
   });
 
   const player1Drink = useStateMachineInput(rive, PLAYER1_STATE, INPUT_NAME);
-
   const player2Drink = useStateMachineInput(rive2, PLAYER2_STATE, INPUT_NAME);
 
   //Igrač pije
   const shootEvent = () => {
     setUkupniBAC(ukupniBAC + (g_alch / (kilaza * r)) * 1000);
-    socket.emit("ShootEvent", "ShootEvent");
+    socket.emit("ShootEvent", { roomID, gameCreator });
     setBrojPica(brojPica + 1);
   };
 
@@ -82,12 +83,14 @@ const GamePage = ({ socket }) => {
     });
   }, []);
 
-  useEffect(() => {
-    socket.emit("fetchIgraceUSobi", roomID);
-    socket.on("igraciUSobi", (e) => {
-      setIgraci(e);
-    });
-  }, [brojRundi]);
+  socket.on("DigniCasu", (gameCreator) => {
+    if (gameCreator) {
+      setDiziCasu1(true);
+    } else {
+      setDiziCasu2(true);
+    }
+    console.log("dosla poruka");
+  });
 
   //Kraj igre/runde
   function krajIgre() {
@@ -141,6 +144,14 @@ const GamePage = ({ socket }) => {
       setShowButton("block");
     });
 
+    if (diziCasu1) {
+      player1Drink.fire();
+      setDiziCasu1(false);
+    } else if (diziCasu2) {
+      player2Drink.fire();
+      setDiziCasu2(false);
+    }
+
     if (i % 2 == 1 && preostaloVrijeme >= 0) {
       let setTimer = setInterval(() => {
         if (ukupniBAC - (1 / 120) * 0.15 <= 0) {
@@ -178,11 +189,6 @@ const GamePage = ({ socket }) => {
             className={`h-[40px] bg-red-900 ${showButton}`}
             onClick={() => {
               shootEvent();
-              if (gameCreator) {
-                player2Drink.fire();
-              } else {
-                player1Drink.fire();
-              }
             }}
           >
             Šotiraj
