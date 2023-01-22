@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { useSelector, useDispatch } from "react-redux";
+
+//test
 
 import Player1Riv from "../assets/player1.riv";
 import Player2Riv from "../assets/player2.riv";
@@ -11,6 +13,8 @@ const Test = (props) => {
   const getUserInfo = useSelector((state) => state.getUserInfo);
 
   const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
+
+  const [showButton, setShowButton] = useState("hidden");
 
   const PLAYER1_STATE = "player1_drinking";
   const PLAYER2_STATE = "player2_drinking";
@@ -37,6 +41,7 @@ const Test = (props) => {
   return (
     <div className="bg-[url('../assets/bg-image.png')] h-[100vh] grid place-items-center">
       <div className="h-[94vh] w-[90vw] m-auto grid grid-cols-6 grid-rows-5 gap-4 overscroll-contain text-white">
+        <div className="absolute w-[100%] h-[100%] z-20"></div>
         <div
           className="
           col-start-1 col-span-3 
@@ -46,7 +51,6 @@ const Test = (props) => {
           border-black border-2 shadow-[-5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
           "
         >
-          Player1 UserInfo: {userName} {r} {kilaza} {gameCreator} {roomID}
           <Player1 />
           <button
             onClick={() => {
@@ -74,12 +78,22 @@ const Test = (props) => {
           border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
         >
           <Player2 />
-          Player2
         </div>
         <div className="col-start-3 col-span-2 row-start-4 grid place-items-center">
-          <button className="py-2 px-5  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white">
+          <button className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white">
             Start Game
           </button>
+          <Button
+            className={`h-[40px] bg-red-900 py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white`}
+            onClick={() => {
+              player1Drink.fire();
+              if (player2Drink) {
+                player2Drink.fire();
+              }
+            }}
+          >
+            Šotiraj
+          </Button>
         </div>
       </div>
     </div>
