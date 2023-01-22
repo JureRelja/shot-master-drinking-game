@@ -51,14 +51,9 @@ const Test = (props) => {
           border-black border-2 shadow-[-5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
           "
         >
-          <Player1 />
-          <button
-            onClick={() => {
-              player1Drink.fire();
-            }}
-          >
-            Drink
-          </button>
+          <div className="w-[100%] h-[100%] pt-7">
+            <Player1 />
+          </div>
         </div>
         <div
           className="
@@ -77,14 +72,16 @@ const Test = (props) => {
           grid place-items-center
           border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
         >
-          <Player2 />
+          <div className="w-[100%] h-[100%] pt-7">
+            <Player2 />
+          </div>
         </div>
         <div className="col-start-3 col-span-2 row-start-4 grid place-items-center">
           <button className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white">
             Start Game
           </button>
           <Button
-            className={`h-[40px] bg-red-900 py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white`}
+            className={`h-[40px] py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white`}
             onClick={() => {
               player1Drink.fire();
               if (player2Drink) {
