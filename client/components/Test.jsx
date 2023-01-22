@@ -40,56 +40,67 @@ const Test = (props) => {
 
   return (
     <div className="bg-[url('../assets/bg-image.png')] h-[100vh] grid place-items-center">
-      <div className="h-[94vh] w-[90vw] m-auto grid grid-cols-6 grid-rows-5 gap-4 overscroll-contain text-white">
-        <div className="absolute w-[100%] h-[100%] z-20"></div>
+      <div className="h-[94vh] w-[70vw] m-auto grid grid-cols-6 grid-rows-5 gap-[5rem] overscroll-contain text-white">
+        {/* <div className="absolute w-[100%] h-[100%] z-20"></div> */}
         <div
           className="
           col-start-1 col-span-3 
           row-start-2 row-span-3 
           bg-[#FF7C23] 
           grid place-items-center
-          border-black border-2 shadow-[-5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
+          shadow-[-0px_0px_50px_0px_rgba(0,0,0)]
           "
         >
-          <div className="w-[100%] h-[100%] pt-7">
+          <button className="bg-white text-black -mt-[1.7rem] -ml-5 py-2 px-10 z-30 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] ">
+            Player1
+          </button>
+          <div className="w-[100%] h-[100%] pt-10">
             <Player1 />
           </div>
         </div>
         <div
           className="
-      h-[80%] w-[80%] 
+      h-[30%] w-[70%] mb-[4rem]
       col-start-3 col-span-2 row-start-1 row-span-2 
-      bg-[#DF5A00] z-10
+      bg-[#FECB63] z-10
       grid place-items-center m-auto
       border-black border-2 shadow-[0px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
         >
-          Timer
+          <div className="bg-[#FF7C23] p-3  w-[100%] grid place-items-center">
+            60 sec
+          </div>
         </div>
         <div
           className="
           col-start-4 col-span-3 row-start-2 row-span-3 
           bg-[#FF7C23] z-1
           grid place-items-center
-          border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
+          shadow-[-0px_0px_50px_0px_rgba(0,0,0)]"
         >
-          <div className="w-[100%] h-[100%] pt-7">
+          <button className="bg-white text-black -mt-[1.7rem] -mr-5 py-2 px-10 z-30 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] ">
+            Player2
+          </button>
+          <div className="w-[100%] h-[100%] pt-10">
             <Player2 />
           </div>
         </div>
         <div className="col-start-3 col-span-2 row-start-4 grid place-items-center">
-          <button className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white">
-            Start Game
-          </button>
-          <Button
-            className={`h-[40px] py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white`}
-            onClick={() => {
-              player1Drink.fire();
-
-              player2Drink.fire();
-            }}
-          >
-            Šotiraj
-          </Button>
+          <div className="grid gap-2 bg-[#FECB63] py-5 px-10 border-black border-2">
+            <button className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white">
+              Start Game
+            </button>
+            <button
+              className={`py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white`}
+              onClick={() => {
+                player1Drink.fire();
+                if (player2Drink) {
+                  player2Drink.fire();
+                }
+              }}
+            >
+              Šotiraj
+            </button>
+          </div>
         </div>
       </div>
     </div>
