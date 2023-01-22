@@ -162,19 +162,18 @@ const GamePage = ({ socket }) => {
 
   return (
     <>
-      <div className={`flex h-[100vh] w-[100vw] flex-col justify-center`}>
+      <Player igraci={igraci} Player1={Player1} Player2={Player2} />
+      <span>Broj popijenih pića: {brojPica}</span>
+
+      <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
+      <span>
+        <b>{bodovi}</b>
+      </span>
+      <div id="timer">
+        <span>Timer: {vrijemeUSekundama}</span>
+      </div>
+      <div className="bg-[url('../assets/bg-image.png')] h-[100vh] grid place-items-center">
         <div className={`grid grid-cols-${igraci.length}`}>
-          <div id="timer">
-            <span>Timer: {vrijemeUSekundama}</span>
-          </div>
-
-          <span>Broj popijenih pića: {brojPica}</span>
-
-          <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
-          <span>
-            <b>{bodovi}</b>
-          </span>
-          <Player igraci={igraci} Player1={Player1} Player2={Player2} />
           <Button
             className={`h-[40px] bg-red-900 ${showButton}`}
             onClick={() => {
