@@ -173,19 +173,23 @@ const GamePageTest = ({ socket }) => {
   return (
     <>
       <div className="bg-[url('../assets/bg-image.png')] h-[100vh] grid place-items-center">
-        <div>
-          <div className="absolute mx-auto h-[8rem] w-[12rem]">
-            <span>Broj popijenih pića: {brojPica}</span>
+        <div className="h-[94vh] w-[70vw]">
+          <div className="grid place-items-center">
+            <div className="grid place-items-center bg-[#FECB63] w-[250px] py-3">
+              <span>Broj popijenih pića: {brojPica}</span>
 
-            <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
-            <span>
-              <b>{bodovi}</b>
-            </span>
-            <div id="timer">
-              <span>Timer: {vrijemeUSekundama}</span>
+              <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
+              <span>
+                <b>{bodovi}</b>
+              </span>
+              <div id="timer">
+                <span>Timer: {vrijemeUSekundama}</span>
+              </div>
             </div>
           </div>
-          <Player igraci={igraci} Player1={Player1} Player2={Player2} />
+          <div className="grid place-items-center">
+            <Player igraci={igraci} Player1={Player1} Player2={Player2} />
+          </div>
         </div>
       </div>
     </>
