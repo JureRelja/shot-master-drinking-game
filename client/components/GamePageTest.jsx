@@ -173,9 +173,9 @@ const GamePageTest = ({ socket }) => {
   return (
     <>
       <div className="bg-[url('../assets/bg-image.png')] h-[100vh] grid place-items-center">
-        <div className="h-[94vh] w-[70vw]">
-          <div className="grid place-items-center">
-            <div className="grid place-items-center bg-[#FECB63] w-[250px] py-3">
+        <div className="h-[100vh] w-[70vw] flex flex-col justify-center overscroll-contain">
+          <div className="grid place-items-center -mt-[9rem]">
+            <div className="grid place-items-center bg-[#FECB63] w-[250px] py-3 -mb-10 z-10">
               <span>Broj popijenih pića: {brojPica}</span>
 
               <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
@@ -187,7 +187,7 @@ const GamePageTest = ({ socket }) => {
               </div>
             </div>
           </div>
-          <div className="grid place-items-center">
+          <div className="grid place-items-center h-[50vh] overscroll-contain">
             <Player igraci={igraci} Player1={Player1} Player2={Player2} />
           </div>
         </div>
