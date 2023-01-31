@@ -3,3 +3,4 @@ export { default as HomePage } from "./HomePage";
 export { default as LoginPage } from "./LoginPage";
 export { default as Test } from "./Test";
 export { default as GamePageTest } from "./GamePageTest";
+export {default as GameEnded } from "./GameEnded";

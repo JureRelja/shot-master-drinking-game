@@ -1,7 +1,5 @@
-import { Button } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
-import odmara from "../assets/odmara.svg";
-import pije from "../assets/pije.svg";
+import GameEnded from "./GameEnded";
 import { useSelector } from "react-redux";
 import Player from "./Player";
 import Player1Riv from "../assets/player1.riv";
@@ -20,16 +18,26 @@ const GamePage = ({ socket }) => {
   //BAC level u krvi
   const [ciljaniBAC, setCiljaniBAC] = useState(0);
   const [ukupniBAC, setUkupniBAC] = useState(0);
-
+  //Number of drinks
   const [brojPica, setBrojPica] = useState(0);
   const [bodovi, setBodovi] = useState(0);
 
   const [brojRundi, setBrojRundi] = useState(0);
   let noviBodovi = 0;
 
+  //Lifting glass
   const [diziCasu1, setDiziCasu1] = useState(false);
   const [diziCasu2, setDiziCasu2] = useState(false);
+
+  //Cliboard
+  const [clipboard, setClipboard] = useState("hidden");
+
+  //List of players
   const [igraci, setIgraci] = useState([]);
+  //Styling state
+  const [darken_bg, setDarken_bg] = useState("hidden");
+
+  const [winner, setWinner] = useState("");
 
   const getUserInfo = useSelector((state) => state.getUserInfo);
   const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
@@ -102,14 +110,10 @@ const GamePage = ({ socket }) => {
         brojPica * ((0.1 / Math.abs(zaokruzeniBAC - ciljaniBAC)) * 10)
       );
     }
-
-    console.log(
-      "1",
-      Math.round(brojPica * ((0.1 / Math.abs(zaokruzeniBAC - ciljaniBAC)) * 10))
-    );
     setBodovi(bodovi + noviBodovi);
     socket.emit("rundaGotova", {
       roomID,
+      userName,
       noviBodovi,
     });
     console.log("2", ukupniBAC);
@@ -123,6 +127,8 @@ const GamePage = ({ socket }) => {
       }
       socket.on("pobjednik", (e) => {
         alert("Kraj igre, Pobjednik je " + e.userName);
+        setWinner(e.userName);
+        setDarken_bg("");
       });
     } else {
       setPreostaloVrijeme(60);
@@ -172,46 +178,102 @@ const GamePage = ({ socket }) => {
 
   return (
     <>
-      <Player igraci={igraci} Player1={Player1} Player2={Player2} />
-      <span>Broj popijenih pića: {brojPica}</span>
-
-      <span>Ciljani level alkohola u krvi: {ciljaniBAC}</span>
-      <span>
-        <b>{bodovi}</b>
-      </span>
-      <div id="timer">
-        <span>Timer: {vrijemeUSekundama}</span>
-      </div>
       <div className="bg-[url('../assets/bg-image.png')] h-[100vh] grid place-items-center">
-        <div className={`grid grid-cols-${igraci.length}`}>
-          <Button
-            className={`h-[40px] bg-red-900 ${showButton}`}
+        <div className="h-[94vh] w-[70vw] m-auto grid grid-cols-6 grid-rows-5 gap-[5rem] overscroll-contain text-white place-items-center">
+          {/* RoomID */}
+          <div
+            className="
+              h-[40px] w-[450px]
+              col-start-2 col-span-4 row-start-1 row-span-1 
+              grid 
+              bg-[#FECB63] z-10
+              grid place-items-center
+              border-black border-2 shadow-[0px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
+              hover:cursor-pointer"
             onClick={() => {
-              shootEvent();
+              navigator.clipboard.writeText(roomID);
+              setClipboard("");
             }}
           >
-            Šotiraj
-          </Button>
-          {gameCreator && i == 0 && brojRundi != 3 ? (
-            <Button
-              color="green"
-              onClick={() => {
-                startGameEvent();
-              }}
-            >
-              Pokreni Igru
-            </Button>
-          ) : null}
-          {gameCreator && i != 0 && i % 2 == 0 && brojRundi != 3 ? (
-            <Button
-              color="green"
-              onClick={() => {
-                startGameEvent();
-              }}
-            >
-              Pokreni sljedeću rundu
-            </Button>
-          ) : null}
+            RoomID:
+            {roomID}
+            <span className={`mt-5 text-white ${clipboard}`}>
+              Kopirano u clipboard
+            </span>
+          </div>
+
+          {/*Black overlay*/}
+          <div
+            className={`absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-40 backdrop-filter z-40 backdrop-blur-sm  ${darken_bg}`}
+          ></div>
+
+          {/*displaying the winner of the game*/}
+          {winner != "" ? <GameEnded winner={winner} /> : null}
+
+          <Player
+            igraci={igraci}
+            Player1={Player1}
+            Player2={Player2}
+            className="col-start-1 col-span-6 grid place-items-center"
+          />
+
+          <div
+            className="
+              h-[75px] w-[200px] mb-[4rem]
+              col-start-3 col-span-2 row-start-2 row-span-1 
+              bg-[#FECB63] z-10
+              grid place-items-center m-auto
+              border-black border-2 shadow-[0px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
+          >
+            <h1 className="text-[20px]">Preostalo vremena:</h1>
+            {vrijemeUSekundama}
+          </div>
+          <div
+            className="
+              h-[75px] w-[270px] mb-[4rem]
+              col-start-3 col-span-2 row-start-3 row-span-1 
+              bg-[#FECB63] z-10
+              grid place-items-center m-auto
+              
+              border-black border-2 shadow-[0px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
+          >
+            <h1 className="text-[20px]">Ciljani level alkohola u krvi:</h1>
+            {ciljaniBAC}
+          </div>
+
+          <div className="col-start-3 col-span-2 row-start-4 grid place-items-center">
+            <div className="grid gap-2 bg-[#FECB63] py-5 px-10 border-black border-2 place-items-center z-5">
+              <button
+                className={`py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white ${showButton}`}
+                onClick={() => {
+                  shootEvent();
+                }}
+              >
+                Šotiraj
+              </button>
+              {gameCreator && i == 0 && brojRundi != 3 ? (
+                <button
+                  className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
+                  onClick={() => {
+                    startGameEvent();
+                  }}
+                >
+                  Pokreni Igru
+                </button>
+              ) : null}
+              {gameCreator && i != 0 && i % 2 == 0 && brojRundi != 3 ? (
+                <button
+                  className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
+                  color="green"
+                  onClick={() => {
+                    startGameEvent();
+                  }}
+                >
+                  Pokreni sljedeću rundu
+                </button>
+              ) : null}
+            </div>
+          </div>
         </div>
       </div>
     </>

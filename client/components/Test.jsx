@@ -51,9 +51,9 @@ const Test = (props) => {
           shadow-[-0px_0px_50px_0px_rgba(0,0,0)]
           "
         >
-          <button className="bg-white text-black -mt-[1.7rem] -ml-5 py-2 px-10 z-30 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] ">
+          <h2 className="bg-white text-black -mt-[1.7rem] -ml-5 py-2 px-10 z-30 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] ">
             Player1
-          </button>
+          </h2>
           <div className="w-[100%] h-[100%] pt-10">
             <Player1 />
           </div>

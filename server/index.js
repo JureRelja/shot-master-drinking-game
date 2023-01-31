@@ -77,7 +77,6 @@ socketIO.on("connection", (socket) => {
   socket.on("pokreniIgru", (roomID) => {
     let BacTarget = getRandomArbitrary(2, 3);
     socketIO.to(roomID).emit("igraPocela", Math.round(BacTarget * 100) / 100);
-    console.log("igra počela")
   });
 
   //Kraj runde
@@ -85,11 +84,12 @@ socketIO.on("connection", (socket) => {
     sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
       if (bodoviIgraca.roomID == pojedinacnaSobaIgraca[0].roomID) {
         pojedinacnaSobaIgraca.forEach((igrac) => {
-          if (igrac.roomID == bodoviIgraca.roomID) {
+          if (igrac.userName == bodoviIgraca.userName) {
             igrac.bodovi += bodoviIgraca.noviBodovi;
-            console.log("runda gotova")
           }
         })
+        socketIO.to(bodoviIgraca.roomID).emit("igraciUSobi", pojedinacnaSobaIgraca);
+        console.log(pojedinacnaSobaIgraca)
       }
     })
   });
@@ -111,7 +111,6 @@ socketIO.on("connection", (socket) => {
     sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
       if (e.roomID == pojedinacnaSobaIgraca[0].roomID) {
         socketIO.to(e.roomID).emit("DigniCasu", e.gameCreator);
-        console.log("Šotiraj")
       }
     })
   });

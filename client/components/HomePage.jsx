@@ -30,8 +30,8 @@ const HomePage = ({ socket }) => {
           <div className="bg-[#FD7221]">
             <Tooltip
               placement="right"
-              className="w-[70vw] max-w-[400px] bg-white text-black p-5 ml-2"
-              content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium magnam amet voluptatibus quisquam repudiandae, corrupti quas ipsa! Labore laboriosam quidem quae minus enim aliquid vel earum aperiam obcaecati corporis! Eveniet."
+              className="w-[80vw] max-w-[400px] bg-white text-black p-5 ml-2"
+              content="Cilj igre je pokazati da se najbolje razumiješ u ispijanje alkoholnih pića i pri tome zaraditi najviše bodova. Bodove zarađuješ tako što pokušavaš svog igrača dovesti što bliže levelu alkohola u krvi prikazanom na tvom ekranu. Broj zarađenih bodova ovisi i o broju pića koja popiješ dok pokušavaš 'napiti' svog igrača, ali najviše bodova ćeš zaraditi ako se samo fokusiraš na pogađanje točnog levela alkohola u krvi. Igra traje tri runde. Bodovi nakon svake runde se zbrajaju i tko na kraju ima najviše bodova je pobjednik.... Možeš ispijati pića na koji god način želiš (brzo, sporo, superbrzo, umjereno, itd.). Znaj da jedno piće simulira standardnu mjeru od 33 mL alkoholnog pića koje sadrži 40% alkohola.... Stoga kreiraj igru, pošalji svoj 'RoomID' svom suigraču i pokaži da poznaješ alkohol bolje od njega."
             >
               <Button
                 className="m-0 p-0 grid place-items-center
