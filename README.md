@@ -39,8 +39,7 @@ There are many more issues and challenges that I faced, but these were just the 
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Currently the game isn't hosted anywhere
 
 ### Built with
 
