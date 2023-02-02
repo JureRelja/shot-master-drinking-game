@@ -8,7 +8,7 @@ const e = require("express");
 app.use(cors());
 const socketIO = require("socket.io")(http, {
   cors: {
-    origin: "https://drink-master.netlify.app:4000",
+    origin: "http://localhost:5173",
   },
 });
 
