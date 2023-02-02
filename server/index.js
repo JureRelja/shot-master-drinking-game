@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 const http = require("http").Server(app);
 const cors = require("cors");
 const e = require("express");
@@ -8,7 +8,7 @@ const e = require("express");
 app.use(cors());
 const socketIO = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://drink-master.netlify.app:4000",
   },
 });
 
