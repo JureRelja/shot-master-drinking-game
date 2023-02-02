@@ -19,12 +19,12 @@ export const handleLoggin = () => {
   };
 };
 
-export const handleUserInfo = (userName, r, kilaza,  gameCreator, roomID) => {
+export const handleUserInfo = (userName, r, weight,  gameCreator, roomID) => {
   return {
     type: USER_INFO,
     payload: {
       userName: userName,
-      kilaza: kilaza,
+      weight: weight,
       r: r,
       roomID: roomID,
       gameCreator: gameCreator,
