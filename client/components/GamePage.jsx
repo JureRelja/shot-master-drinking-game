@@ -8,40 +8,48 @@ import Player2Riv from "../assets/player2.riv";
 import { useRive, useStateMachineInput } from "@rive-app/react-canvas";
 
 const GamePage = ({ socket }) => {
-  const g_alch = 10.428;
+  const g_alch = 10.428; //grams of alcohol in one shot
 
-  const [i, setI] = useState(0); //Ako je i=1, igra počinje
-  const [showButton, setShowButton] = useState("hidden");
-  //Preostalo vrijeme igre
-  const [preostaloVrijeme, setPreostaloVrijeme] = useState(60);
-  const [vrijemeUSekundama, setVrijemeUSekundama] = useState(60);
-  //BAC level u krvi
-  const [ciljaniBAC, setCiljaniBAC] = useState(0);
-  const [ukupniBAC, setUkupniBAC] = useState(0);
+  //If the i=0, the game starts
+  const [i, setI] = useState(0);
+
+  //Remmaing game time
+  const [remainingTime, setRemainingTime] = useState(60);
+  const [timeInSeconds, setTimeInSeconds] = useState(60);
+
+  //BAC level in the blood
+  const [targetBAC, setTargetBAC] = useState(0);
+  const [totalBAC, setTotalBAC] = useState(0);
+
   //Number of drinks
-  const [brojPica, setBrojPica] = useState(0);
-  const [bodovi, setBodovi] = useState(0);
+  const [numDrniks, setNumDrinks] = useState(0);
+  const [points, setPoints] = useState(0);
 
-  const [brojRundi, setBrojRundi] = useState(0);
-  let noviBodovi = 0;
+  const [numRounds, setNumRounds] = useState(0);
+  let newPoints = 0;
 
   //Lifting glass
-  const [diziCasu1, setDiziCasu1] = useState(false);
-  const [diziCasu2, setDiziCasu2] = useState(false);
+  const [liftGlass1, setLiftGlass1] = useState(false);
+  const [liftGlass2, setLiftGlass2] = useState(false);
 
   //Cliboard
   const [clipboard, setClipboard] = useState("hidden");
 
-  //List of players
-  const [igraci, setIgraci] = useState([]);
-  //Styling state
+  //Styling states
   const [darken_bg, setDarken_bg] = useState("hidden");
+  const [showButton, setShowButton] = useState("hidden");
 
+  //List of players
+  const [players, setPlayers] = useState([]);
+
+  //Winner
   const [winner, setWinner] = useState("");
 
+  //User info from redux
   const getUserInfo = useSelector((state) => state.getUserInfo);
-  const { userName, r, kilaza, gameCreator, roomID } = getUserInfo;
+  const { userName, r, weight, gameCreator, roomID } = getUserInfo;
 
+  //Rive animations for players lifting glasses
   const PLAYER1_STATE = "player1_drinking";
   const PLAYER2_STATE = "player2_drinking";
   const INPUT_NAME = "Click";
@@ -63,112 +71,107 @@ const GamePage = ({ socket }) => {
   const player1Drink = useStateMachineInput(rive, PLAYER1_STATE, INPUT_NAME);
   const player2Drink = useStateMachineInput(rive2, PLAYER2_STATE, INPUT_NAME);
 
-  //Igrač pije
+  //Player takes a shot
   const shootEvent = () => {
-    setUkupniBAC(ukupniBAC + (g_alch / (kilaza * r)) * 1000);
+    setTotalBAC(totalBAC + (g_alch / (weight * r)) * 1000);
     socket.emit("ShootEvent", { roomID, gameCreator });
-    setBrojPica(brojPica + 1);
+    setNumDrinks(numDrniks + 1);
   };
 
-  //Pokretanje igre
+  //Starting the game
   const startGameEvent = () => {
-    socket.emit("pokreniIgru", roomID);
+    socket.emit("startGame", roomID);
   };
 
-  //Aktvini igrači u sobi
+  //Getting active players (every time except the first time)
   useEffect(() => {
-    socket.on("igraciUSobi", (e) => {
-      setIgraci(e);
+    socket.on("playersInRoom", (e) => {
+      setPlayers(e);
     });
   }, [socket]);
-
-  //Ažuriranje bodova igrača
-
+  //Getting active players (only once)
   useEffect(() => {
-    socket.emit("fetchIgraceUSobi", roomID);
-    socket.on("igraciUSobi", (e) => {
-      setIgraci(e);
+    socket.emit("getPlayersInRoom", roomID);
+    socket.on("playersInRoom", (e) => {
+      setPlayers(e);
     });
   }, []);
 
-  socket.on("DigniCasu", (gameCreator) => {
+  socket.on("liftGlass", (gameCreator) => {
     if (gameCreator) {
-      setDiziCasu1(true);
+      setLiftGlass1(true);
     } else {
-      setDiziCasu2(true);
+      setLiftGlass2(true);
     }
-    console.log("dosla poruka");
   });
 
-  //Kraj igre/runde
-  function krajIgre() {
-    let zaokruzeniBAC = Math.round(ukupniBAC * 100) / 100;
-    if (Math.abs(zaokruzeniBAC - ciljaniBAC) <= 0.1) {
-      noviBodovi = brojPica * 10;
+  //End of the game/round
+  function gameEnded() {
+    let roundedBAC = Math.round(totalBAC * 100) / 100;
+    if (Math.abs(roundedBAC - targetBAC) <= 0.1) {
+      newPoints = numDrniks * 10;
     } else {
-      noviBodovi = Math.round(
-        brojPica * ((0.1 / Math.abs(zaokruzeniBAC - ciljaniBAC)) * 10)
+      newPoints = Math.round(
+        numDrniks * ((0.1 / Math.abs(roundedBAC - targetBAC)) * 10)
       );
     }
-    setBodovi(bodovi + noviBodovi);
-    socket.emit("rundaGotova", {
+    setPoints(points + newPoints);
+    socket.emit("roundEnded", {
       roomID,
       userName,
-      noviBodovi,
+      newPoints,
     });
-    console.log("2", ukupniBAC);
-    console.log(noviBodovi);
-    if (brojRundi == 2) {
+    if (numRounds == 2) {
       if (gameCreator) {
-        socket.emit("krajIgre", roomID);
+        socket.emit("gameEnded", roomID);
 
         setShowButton("hidden");
-        setBrojRundi(brojRundi + 1);
+        setNumRounds(numRounds + 1);
       }
-      socket.on("pobjednik", (e) => {
-        alert("Kraj igre, Pobjednik je " + e.userName);
+      socket.on("winner", (e) => {
         setWinner(e.userName);
         setDarken_bg("");
       });
     } else {
-      setPreostaloVrijeme(60);
-      setVrijemeUSekundama(60);
-      setUkupniBAC(0);
-      setBrojPica(0);
+      setRemainingTime(60);
+      setTimeInSeconds(60);
+      setTotalBAC(0);
+      setNumDrinks(0);
       setI(i + 1);
-      setBrojRundi(brojRundi + 1);
+      setNumRounds(numRounds + 1);
       setShowButton("hidden");
-      alert("Kraj runde");
+      alert("End of round!");
     }
   }
 
-  //Ciljani BAC koji igrači trebaju postići
+  //Main logic of the game for counting down time and calculating BAC of player depending on the elapsed time and number of drinks the player took
   useEffect(() => {
-    socket.on("igraPocela", (e) => {
-      setCiljaniBAC(e);
+    socket.on("gameStarted", (e) => {
+      setTargetBAC(e);
       setI(i + 1);
       setShowButton("block");
+      setClipboard("hidden");
     });
 
-    if (diziCasu1) {
+    if (liftGlass1) {
       player1Drink.fire();
-      setDiziCasu1(false);
-    } else if (diziCasu2) {
+      setLiftGlass1(false);
+    } else if (liftGlass2) {
       player2Drink.fire();
-      setDiziCasu2(false);
+      setLiftGlass2(false);
     }
 
-    if (i % 2 == 1 && preostaloVrijeme >= 0) {
+    if (i % 2 == 1 && remainingTime >= 0) {
       let setTimer = setInterval(() => {
-        if (ukupniBAC - (1 / 120) * 0.15 <= 0) {
-          setUkupniBAC(0);
+        if (totalBAC - (1 / 120) * 0.15 <= 0) {
+          setTotalBAC(0);
         } else {
-          setUkupniBAC(ukupniBAC - (1 / 120) * 0.15);
+          setTotalBAC(totalBAC - (1 / 120) * 0.15);
         }
-        setVrijemeUSekundama(Math.trunc(preostaloVrijeme));
-        setPreostaloVrijeme(preostaloVrijeme - 0.1);
-        if (preostaloVrijeme <= 0.1) {
-          krajIgre();
+        setTimeInSeconds(Math.trunc(remainingTime));
+        setRemainingTime(remainingTime - 0.1);
+        if (remainingTime <= 0.1) {
+          gameEnded();
         }
       }, 10);
 
@@ -184,8 +187,7 @@ const GamePage = ({ socket }) => {
           <div
             className="
               h-[40px] w-[450px]
-              col-start-2 col-span-4 row-start-1 row-span-1 
-              grid 
+              col-start-2 col-span-4 row-start-1 row-span-1  
               bg-[#FECB63] z-10
               grid place-items-center
               border-black border-2 shadow-[0px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
@@ -198,20 +200,22 @@ const GamePage = ({ socket }) => {
             RoomID:
             {roomID}
             <span className={`mt-5 text-white ${clipboard}`}>
-              Kopirano u clipboard
+              RoomID coppied to clipboard!
             </span>
           </div>
 
           {/*Black overlay*/}
           <div
-            className={`absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-40 backdrop-filter z-40 backdrop-blur-sm  ${darken_bg}`}
+            className={`absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-40 backdrop-filter z-30 backdrop-blur-sm  `}
           ></div>
 
           {/*displaying the winner of the game*/}
           {winner != "" ? <GameEnded winner={winner} /> : null}
+          <GameEnded winner={winner} />
 
+          {/*Player object which changes depending on if there is only one player connected or two*/}
           <Player
-            igraci={igraci}
+            players={players}
             Player1={Player1}
             Player2={Player2}
             className="col-start-1 col-span-6 grid place-items-center"
@@ -225,8 +229,8 @@ const GamePage = ({ socket }) => {
               grid place-items-center m-auto
               border-black border-2 shadow-[0px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
           >
-            <h1 className="text-[20px]">Preostalo vremena:</h1>
-            {vrijemeUSekundama}
+            <h1 className="text-[20px]">Remmaing time:</h1>
+            {timeInSeconds}
           </div>
           <div
             className="
@@ -237,10 +241,11 @@ const GamePage = ({ socket }) => {
               
               border-black border-2 shadow-[0px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]"
           >
-            <h1 className="text-[20px]">Ciljani level alkohola u krvi:</h1>
-            {ciljaniBAC}
+            <h1 className="text-[20px]">BAC target:</h1>
+            {targetBAC}
           </div>
 
+          {/*Changing buttons how the game progresses*/}
           <div className="col-start-3 col-span-2 row-start-4 grid place-items-center">
             <div className="grid gap-2 bg-[#FECB63] py-5 px-10 border-black border-2 place-items-center z-5">
               <button
@@ -249,19 +254,19 @@ const GamePage = ({ socket }) => {
                   shootEvent();
                 }}
               >
-                Šotiraj
+                Take a shot
               </button>
-              {gameCreator && i == 0 && brojRundi != 3 ? (
+              {gameCreator && i == 0 && numRounds != 3 ? (
                 <button
-                  className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
+                  className="py-2 px-5 z-20  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
                   onClick={() => {
                     startGameEvent();
                   }}
                 >
-                  Pokreni Igru
+                  Start game
                 </button>
               ) : null}
-              {gameCreator && i != 0 && i % 2 == 0 && brojRundi != 3 ? (
+              {gameCreator && i != 0 && i % 2 == 0 && numRounds != 3 ? (
                 <button
                   className="py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
                   color="green"
@@ -269,7 +274,7 @@ const GamePage = ({ socket }) => {
                     startGameEvent();
                   }}
                 >
-                  Pokreni sljedeću rundu
+                  Start the next round
                 </button>
               ) : null}
             </div>

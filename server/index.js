@@ -12,139 +12,138 @@ const socketIO = require("socket.io")(http, {
   },
 });
 
-//Nasumični BAC broj
+//Random BAC number generator
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-//Insertion sort - traženje pobjednika
-function nalazakPobjednika(pojedinacnaSobaIgraca) {
-  pojedinacnaSobaIgraca.forEach((igrac) => {
-    let index = pojedinacnaSobaIgraca.indexOf(igrac)
-    let tempIgrac = pojedinacnaSobaIgraca[index - 1]
+//Insertion sort - finding the winner
+function findWinner(individualPlayerRoom) {
+  individualPlayerRoom.forEach((player) => {
+    let index = individualPlayerRoom.indexOf(player)
+    let tempPlayer = individualPlayerRoom[index - 1]
     if (index == 0) {
-      return pojedinacnaSobaIgraca;
+      return individualPlayerRoom;
     }
-    while (igrac.bodovi > pojedinacnaSobaIgraca[index - 1].bodovi) {
-      pojedinacnaSobaIgraca[index - 1] = igrac;
-      pojedinacnaSobaIgraca[index] = tempIgrac;
+    while (player.points > individualPlayerRoom[index - 1].bodovi) {
+      individualPlayerRoom[index - 1] = player;
+      individualPlayerRoom[index] = tempPlayer;
     }
   }
   )
-  return pojedinacnaSobaIgraca;
+  return individualPlayerRoom;
 }
 
-let sveSobeIgraca = [];
+
+//List of all curently active players connected to different rooms
+let allPlayerRooms = [];
 
 socketIO.on("connection", (socket) => {
   console.log("🔥: A user connected");
 
-  socket.on("userDataLogin", (igrac) => {
+  socket.on("userDataLogin", (player) => {
     
-    let postojiSoba = false;
-    let brIgracauSobi = socketIO.sockets.adapter.rooms.get(igrac.roomID)?.size ?? 0;
+    let roomExists = false;
+    let numPlayersInRoom = socketIO.sockets.adapter.rooms.get(player.roomID)?.size ?? 0;
     
-    if (brIgracauSobi < 2) {
-      //Dodaje igrača u sobu
-      socket.join(igrac.roomID);
+    if (numPlayersInRoom < 2) {
+      //Connceting player to the room
+      socket.join(player.roomID);
 
-      //Dodaje igrača u listu igrača
-      sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-        if (igrac.roomID == pojedinacnaSobaIgraca[0].roomID) {
-          pojedinacnaSobaIgraca.push(igrac);
-          postojiSoba = true;
+      //Adding player to the list of players in the room
+      allPlayerRooms.forEach((individualPlayerRoom) => {
+        if (player.roomID == individualPlayerRoom[0].roomID) {
+          individualPlayerRoom.push(player);
+          roomExists = true;
         }
       })
 
-      if (postojiSoba == false) {
-        sveSobeIgraca.push([igrac]);    
+      if (roomExists == false) {
+        allPlayerRooms.push([player]);    
       }
     }
-    //Šalje broj igrača u sobi 
-    socket.emit('BrojIgracaUSobi', brIgracauSobi);
+    //Sends the number of players in the room
+    socket.emit('numberOfPlayersInRoom', numPlayersInRoom);
   })
 
-  //Šalje listu igrača u sobi
-  socket.on("fetchIgraceUSobi", (roomID) => {
-    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-      if (roomID == pojedinacnaSobaIgraca[0].roomID) {
-        socketIO.to(roomID).emit("igraciUSobi", pojedinacnaSobaIgraca);
+  //Sending the list of players in the room
+  socket.on("getPlayersInRoom", (roomID) => {
+    allPlayerRooms.forEach((individualPlayerRoom) => {
+      if (roomID == individualPlayerRoom[0].roomID) {
+        socketIO.to(roomID).emit("playersInRoom", individualPlayerRoom);
       }
     })
   })
    
-  //Kada igrač klikne na pokreni igru
-  socket.on("pokreniIgru", (roomID) => {
-    let BacTarget = getRandomArbitrary(2, 3);
-    socketIO.to(roomID).emit("igraPocela", Math.round(BacTarget * 100) / 100);
+  //When player press on start game button
+  socket.on("startGame", (roomID) => {
+    let targetBAC = getRandomArbitrary(2, 3);
+    socketIO.to(roomID).emit("gameStarted", Math.round(targetBAC * 100) / 100);
   });
 
-  //Kraj runde
-  socket.on("rundaGotova", (bodoviIgraca) => {
-    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-      if (bodoviIgraca.roomID == pojedinacnaSobaIgraca[0].roomID) {
-        pojedinacnaSobaIgraca.forEach((igrac) => {
-          if (igrac.userName == bodoviIgraca.userName) {
-            igrac.bodovi += bodoviIgraca.noviBodovi;
+  //Round ended
+  socket.on("roundEnded", (player) => {
+    allPlayerRooms.forEach((individualPlayerRoom) => {
+      if (player.roomID == individualPlayerRoom[0].roomID) {
+        individualPlayerRoom.forEach((storedPlayer) => {
+          if (storedPlayer.userName == player.userName) {
+            storedPlayer.points += player.newPoints;
           }
         })
-        socketIO.to(bodoviIgraca.roomID).emit("igraciUSobi", pojedinacnaSobaIgraca);
-        console.log(pojedinacnaSobaIgraca)
+        socketIO.to(player.roomID).emit("playersInRoom", individualPlayerRoom);
       }
     })
   });
 
-  //Kraj igre
-  socket.on("krajIgre", (roomID) => {
-    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-      if (roomID == pojedinacnaSobaIgraca[0].roomID) {
-        let pobjednik = nalazakPobjednika(pojedinacnaSobaIgraca);
-        socketIO.to(roomID).emit("pobjednik", pobjednik[0]);
-        console.log(pobjednik[0]);
+  //Game ended
+  socket.on("gameEnded", (roomID) => {
+    allPlayerRooms.forEach((individualPlayerRoom) => {
+      if (roomID == individualPlayerRoom[0].roomID) {
+        let winner = findWinner(individualPlayerRoom);
+        socketIO.to(roomID).emit("winner", winner[0]);
 
       }
     })
   })
 
-  //Kada igrač klikne na Šotiraj
+  //When player takes a shoot
   socket.on("ShootEvent", (e) => {
-    sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-      if (e.roomID == pojedinacnaSobaIgraca[0].roomID) {
-        socketIO.to(e.roomID).emit("DigniCasu", e.gameCreator);
+    allPlayerRooms.forEach((individualPlayerRoom) => {
+      if (e.roomID == individualPlayerRoom[0].roomID) {
+        socketIO.to(e.roomID).emit("liftGlass", e.gameCreator);
       }
     })
   });
 
-  //Odspajanje igrača
+  //Disconnecting the player from the game
   socket.on("disconnect", () => {
-    //console.log(sveSobeIgraca)
     console.log("🔥: A user disconnected");
 
     //Briše igrača iz sobe
     new Promise((resolve, reject) => {
-      sveSobeIgraca.forEach((pojedinacnaSobaIgraca) => {
-        pojedinacnaSobaIgraca.forEach((igrac) => {
-          if (igrac.socketID == socket.id) {
-            //Sprema index sobe iz koje se igrač odspojio
-            let index = sveSobeIgraca.indexOf(pojedinacnaSobaIgraca);
-            //Stvara privremenu sobu bez igrača koji se odspojio
-            let tempSoba = pojedinacnaSobaIgraca.filter(
-              (igrac) => igrac.socketID !== socket.id
+      allPlayerRooms.forEach((individualPlayerRoom) => {
+        individualPlayerRoom.forEach((player) => {
+          if (player.socketID == socket.id) {
+            //Saving the index of the room in which the player was
+            let index = allPlayerRooms.indexOf(individualPlayerRoom);
+            //Creating temporary room list without the disconnected player
+            let tempRoom = individualPlayerRoom.filter(
+              (player) => player.socketID !== socket.id
             );
 
-            //Postavlja stvarnu listu igrača u sobi da je jednaka privremenoj sobi
-            if (tempSoba.length == 0) {
-              sveSobeIgraca.splice(index, 1)
+            //Setting the real list of players in the room to the temporary one
+            if (tempRoom.length == 0) {
+              allPlayerRooms.splice(index, 1)
             }  
             else {
-              for (let i = 0; i < tempSoba.length; i++) {
-                pojedinacnaSobaIgraca[i] = tempSoba[i]
+              for (let i = 0; i < tempRoom.length; i++) {
+                individualPlayerRoom[i] = tempRoom[i]
               }
             }
             
-            pojedinacnaSobaIgraca.pop()
-            //Šalje novu listu igrača svim igračima u sobi
-            socketIO.to(igrac.roomID).emit("igraciUSobi", pojedinacnaSobaIgraca);
+            individualPlayerRoom.pop()
+            //Sending the new list of players to all active players in the room
+            socketIO.to(player.roomID).emit("playersInRoom", individualPlayerRoom);
           }
         })   
       })

@@ -1,28 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { Input } from "@material-tailwind/react";
-import { Button } from "@material-tailwind/react";
+import React, { useState } from "react";
 import { FaWeightHanging } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { handleUserInfo } from "../src/actions";
 import { GrFormClose } from "react-icons/gr";
 
 const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
   const navigate = useNavigate();
 
-  //Podatci koje unosi korisnik
-  const [kile, setKile] = useState(0);
+  //Data the the user will input
+  const [weight, setWeight] = useState(0);
   const [r, setR] = useState(0);
   const [userName, setUserName] = useState("");
   const [roomID, setRoomID] = useState("");
-  const [igraci, setIgraci] = useState([]);
 
   const dispatch = useDispatch();
 
   const handleGender = (e) => {
-    if (e.target.value === "Muško") {
+    if (e.target.value === "male") {
       setR(0.68);
-    } else if (e.target.value === "Žensko") {
+    } else if (e.target.value === "female") {
       setR(0.55);
     }
     if (roomID == "") {
@@ -32,23 +29,23 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
 
   const submitEvent = (event) => {
     event.preventDefault();
-    if (r == 0 || kile == 0 || userName == "") {
-      alert("Niste unijeli masu ili odabrali spol");
+    if (r == 0 || weight == 0 || userName == "") {
+      alert("You must fill all the fields");
     } else {
       socket.emit("userDataLogin", {
         userName,
         socketID: socket.id,
         gameCreator,
         roomID,
-        bodovi: 0,
+        points: 0,
       });
 
-      socket.on("BrojIgracaUSobi", (brIgracaUSobi) => {
-        if (brIgracaUSobi < 2) {
-          dispatch(handleUserInfo(userName, r, kile, gameCreator, roomID));
+      socket.on("numberOfPlayersInRoom", (numPlayersInRoom) => {
+        if (numPlayersInRoom < 2) {
+          dispatch(handleUserInfo(userName, r, weight, gameCreator, roomID));
           navigate(`/game?id=${roomID}`);
         } else {
-          alert("nista od toga");
+          alert("This room is full.");
         }
       });
     }
@@ -77,7 +74,7 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
               type="text"
               value={roomID}
               onChange={(e) => setRoomID(e.target.value)}
-              placeholder="Unesi roomID"
+              placeholder="Input RoomID"
               className="w-full px-4 py-2 
             border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
             focus:outline-none focus:outline-0
@@ -86,22 +83,22 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
           )}
 
           <input
-            label="Korisničko ime"
+            label="Username"
             type="text"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            placeholder="Unesi korisničko ime"
+            placeholder="Input username"
             className="mt-3 w-full px-4 py-2 
             border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
             focus:outline-none focus:outline-0
             "
           />
           <input
-            label="Masa"
+            label="Weight"
             type="number"
-            onChange={(e) => setKile(e.target.value * 1000)}
+            onChange={(e) => setWeight(e.target.value * 1000)}
             icon={<FaWeightHanging />}
-            placeholder="Unesi masu u kg"
+            placeholder="Input your weight in kg"
             className="w-full mt-3 px-4 py-2 
               border-black border-2 shadow-[5px_4px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
               focus:outline-none focus:outline-0"
@@ -113,9 +110,9 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
             border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)]
             "
           >
-            <option value="">Odaberi spol</option>
-            <option value="Muško">Muško</option>
-            <option value="Žensko">Žensko</option>
+            <option value="">Choose gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
 
           {gameCreator ? (
@@ -123,14 +120,14 @@ const LoginPage = ({ socket, setDarken_bg, setShowForm, gameCreator }) => {
               type="submit"
               className="mt-3 ml-auto mr-auto py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
             >
-              Kreiraj igru
+              Create game
             </button>
           ) : (
             <button
               type="submit"
               className="mt-3 ml-auto mr-auto py-2 px-5 border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white"
             >
-              Pridruži se Igri
+              Join game
             </button>
           )}
         </form>
