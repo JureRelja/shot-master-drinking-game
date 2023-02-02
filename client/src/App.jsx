@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage, GamePage, Test } from "../components";
 import socketIO from "socket.io-client";
 
-const socket = socketIO("https://drinking-game-react.onrender.com:4000");
+const socket = socketIO("https://drinking-game-react.onrender.com");
 export default function App() {
   return (
     <BrowserRouter>
