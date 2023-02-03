@@ -8,7 +8,7 @@ const e = require("express");
 app.use(cors());
 const socketIO = require("socket.io")(http, {
   cors: {
-    origin: "https://drinking-game-react.onrender.com",
+    origin: "https://shot-master.onrender.com",
   },
 });
 

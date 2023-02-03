@@ -173,7 +173,7 @@ const GamePage = ({ socket }) => {
         if (remainingTime <= 0.1) {
           gameEnded();
         }
-      }, 10);
+      }, 100);
 
       return () => clearInterval(setTimer);
     }
