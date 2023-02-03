@@ -206,7 +206,7 @@ const GamePage = ({ socket }) => {
 
           {/*Black overlay*/}
           <div
-            className={`absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-40 backdrop-filter z-30 backdrop-blur-sm  ${darken_bg}}`}
+            className={`absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-40 backdrop-filter z-30 backdrop-blur-sm  ${darken_bg}`}
           ></div>
 
           {/*displaying the winner of the game*/}
