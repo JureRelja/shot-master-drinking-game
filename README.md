@@ -39,7 +39,9 @@ There are many more issues and challenges that I faced, but these were just the 
 
 ### Links
 
-- Currently the game isn't hosted anywhere
+Here you can try out the game for yourself. Feel free to send me your opinion.
+
+- Live version of the game - [https://shot-master.onrender.com/](https://shot-master.onrender.com/)
 
 ### Built with
 

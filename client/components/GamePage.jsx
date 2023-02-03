@@ -248,7 +248,7 @@ const GamePage = ({ socket }) => {
           <div className="col-start-3 col-span-2 row-start-4 grid place-items-center">
             <div className="grid gap-2 bg-[#FECB63] py-5 px-10 border-black border-2 place-items-center z-5">
               <button
-                className={`py-2 px-5 z-30  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white ${showButton}`}
+                className={`py-2 px-5 z-20  border-black border-2 shadow-[5px_5px_0px_0px_rgba(0,0,0)] transition-all hover:shadow-[1px_0px_0px_0px_rgba(0,0,0)] bg-[#fd853f] text-white ${showButton}`}
                 onClick={() => {
                   shootEvent();
                 }}
