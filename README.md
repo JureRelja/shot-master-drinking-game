@@ -1,6 +1,6 @@
-# Drinking game
+# Shot master
 
-This is the drinking game that is meant to be played in the browser. It's a multiplayer game where two players fight over who knows how to drink better. At the start of the game, the target BAC level (Blood alcohol concentration) is presented to the players. Player's goal is to try to get their player as close to that BAC level as posible by drinking. Players earn points depending on how close their BAC was to the BAC that was presented on the screen. The game lasts 3 rounds, and who ever has the most points after 3 rounds is the winner. As each round progresses Player's BAC lever lovers down to simulate a player getting sober. 60 second passed on the screen presents 5 hours of real time.
+Shot master is the drinking game that is meant to be played in the browser. It's a multiplayer game where two players fight over who knows how to drink better. At the start of the game, the target BAC level (Blood alcohol concentration) is presented to the players. Player's goal is to try to get their player as close to that BAC level as posible by drinking. Players earn points depending on how close their BAC was to the BAC that was presented on the screen. The game lasts 3 rounds, and who ever has the most points after 3 rounds is the winner. As each round progresses Player's BAC lever lovers down to simulate a player getting sober. 60 second passed on the screen presents 5 hours of real time.
 
 ## Table of contents
 
