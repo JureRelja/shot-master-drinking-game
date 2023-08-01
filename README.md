@@ -60,7 +60,7 @@ Here you can try out the game for yourself. Feel free to send me your opinion.
 
 ### What I learned
 
-I personally learned a ton while doing this project. This was my first project using MERN stack. I previously used Python and Flask, but I didn't have many experience with JavaScript frameworks. In the process I learned React (at least a part of it). I learned how to use different hooks like useState and useEffect. We also used Redux, so I needed to get along pretty well with that too.
+I personally learned a ton while doing this project. This was my first project using MERN stack. I previously used Python and Flask, but I didn't have many experience with JavaScript frameworks. In the process I learned React. I learned how to use different hooks like useState and useEffect. We also used Redux, so I needed to get along pretty well with that too.
 
 For the client and server communication we used Socket.io web socket library. That allowed as to have two way communication which makes making an interactive game like this much easier than if we used the standard one way communication.
 
